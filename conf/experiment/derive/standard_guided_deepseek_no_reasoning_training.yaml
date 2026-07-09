@@ -1,0 +1,12 @@
+# @package _global_
+
+defaults:
+  - override /datasets/sft: collection/standard/training
+  - override /datasets/sft/quality: guided
+  - override /datasets/sft/regime: guided
+  - override /datasets/sft/teacher: deepseek
+  - override /reasoning_variant_derivation: no_reasoning
+
+datasets:
+  sft:
+    reasoning_variant: ${reasoning_variant_derivation.variant}

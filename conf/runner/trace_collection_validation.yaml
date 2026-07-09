@@ -1,0 +1,3 @@
+defaults:
+  - trace_collection/standard_validation
+  - _self_

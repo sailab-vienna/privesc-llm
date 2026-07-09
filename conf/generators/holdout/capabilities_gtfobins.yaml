@@ -1,0 +1,4 @@
+# @package generators
+
+capabilities_allowlist:
+  - node

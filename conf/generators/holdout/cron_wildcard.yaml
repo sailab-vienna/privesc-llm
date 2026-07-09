@@ -1,0 +1,12 @@
+# @package generators
+
+cron_backup_dirs:
+  - snapshots
+
+cron_wildcard:
+  archive_path: /var/spool/snapshots/nightly.tar.gz
+  job_directory: /etc/cron.d
+  job_names:
+    - snapshot_pack
+  wait_seconds: 65
+  exploit_script_name: runner.sh

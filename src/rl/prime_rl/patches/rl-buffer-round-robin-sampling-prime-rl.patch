@@ -1,0 +1,195 @@
+diff --git a/packages/prime-rl-configs/src/prime_rl/configs/orchestrator.py b/packages/prime-rl-configs/src/prime_rl/configs/orchestrator.py
+index 391181622..3d88cffdc 100644
+--- a/packages/prime-rl-configs/src/prime_rl/configs/orchestrator.py
++++ b/packages/prime-rl-configs/src/prime_rl/configs/orchestrator.py
+@@ -635,6 +635,17 @@ class BufferConfig(BaseConfig):
+         ),
+     ] = None
+ 
++    env_sampling_strategy: Annotated[
++        Literal["random", "round_robin"],
++        Field(
++            description=(
++                "How to choose environments when sampling examples. "
++                "'random' uses env ratios or the natural dataset distribution; "
++                "'round_robin' cycles through non-empty environments in shuffled order."
++            )
++        ),
++    ] = "random"
++
+     easy_threshold: Annotated[
+         float | None,
+         Field(
+diff --git a/src/prime_rl/orchestrator/buffer.py b/src/prime_rl/orchestrator/buffer.py
+index 0217faea7..00602df9a 100644
+--- a/src/prime_rl/orchestrator/buffer.py
++++ b/src/prime_rl/orchestrator/buffer.py
+@@ -120,6 +120,8 @@ class Buffer:
+         for env in envs:
+             self.env_buffers[env.name] = _EnvBuffer(env, config)
+         self.env_names = envs.names
++        self._env_cycle: list[str] = []
++        self.num_sampled_examples_per_step = {env_name: 0 for env_name in self.env_names}
+ 
+         total = sum(eb.num_total for eb in self.env_buffers.values())
+         self.logger.debug(
+@@ -128,32 +130,63 @@ class Buffer:
+         )
+ 
+         env_ratios = [env.config.ratio for env in envs]
+-        if any(r is not None for r in env_ratios):
+-            env_ratio = mean_normalize(env_ratios)
+-            self.env_probs = dict(zip(self.env_names, env_ratio))
+-            self.logger.debug(
+-                f"Sampling buffer according to provided environment ratios "
+-                f"({', '.join(f'{k}={v:.2f}' for k, v in self.env_probs.items())})"
+-            )
++        if config.env_sampling_strategy == "random":
++            if any(r is not None for r in env_ratios):
++                env_ratio = mean_normalize(env_ratios)
++                self.env_probs = dict(zip(self.env_names, env_ratio))
++                self.logger.debug(
++                    "Sampling buffer with random env selection using provided environment ratios "
++                    f"({', '.join(f'{k}={v:.2f}' for k, v in self.env_probs.items())})"
++                )
++            else:
++                env_counts = [self.env_buffers[name].num_normal for name in self.env_names]
++                env_ratio = mean_normalize(env_counts)
++                self.env_probs = dict(zip(self.env_names, env_ratio))
++                self.logger.debug(
++                    "Sampling buffer with random env selection using the natural environment distribution "
++                    f"({', '.join(f'{k}={v:.2f}' for k, v in self.env_probs.items())})"
++                )
++            self._sample_envs = self._sample_envs_random
+         else:
+-            env_counts = [self.env_buffers[name].num_normal for name in self.env_names]
+-            env_ratio = mean_normalize(env_counts)
+-            self.env_probs = dict(zip(self.env_names, env_ratio))
+-            self.logger.debug(
+-                f"Sampling buffer according to natural environment distribution "
+-                f"({', '.join(f'{k}={v:.2f}' for k, v in self.env_probs.items())})"
+-            )
++            if any(r is not None for r in env_ratios):
++                raise ValueError("env ratios are only supported with env_sampling_strategy='random'.")
++            self.logger.debug("Sampling buffer with round-robin env selection across non-empty environments")
++            self._sample_envs = self._sample_envs_round_robin
+ 
+         self.rollout_buffer: list[vf.RolloutOutput] = []
+ 
+     def sample_examples(self, n: int) -> list[dict]:
+-        """Samples n examples across envs, respecting env ratios."""
++        """Samples n examples across envs using the configured sampling strategy."""
+         non_empty = [name for name, eb in self.env_buffers.items() if eb.examples]
+         if not non_empty:
+             raise ValueError("No environments left with examples.")
+ 
+-        weights = [self.env_probs[name] for name in non_empty]
+-        return [self.env_buffers[name].sample_example() for name in random.choices(non_empty, weights=weights, k=n)]
++        samples = []
++        for env_name in self._sample_envs(non_empty, n):
++            samples.append(self.env_buffers[env_name].sample_example())
++            self.num_sampled_examples_per_step[env_name] += 1
++        return samples
++
++    def _sample_envs_random(self, non_empty_envs: list[str], n: int) -> list[str]:
++        weights = [self.env_probs[name] for name in non_empty_envs]
++        return random.choices(non_empty_envs, weights=weights, k=n)
++
++    def _sample_envs_round_robin(self, non_empty_envs: list[str], n: int) -> list[str]:
++        active_envs = set(non_empty_envs)
++        env_cycle = [env_name for env_name in self._env_cycle if env_name in active_envs]
++        sampled_envs: list[str] = []
++
++        while len(sampled_envs) < n:
++            if not env_cycle:
++                env_cycle = non_empty_envs.copy()
++                random.shuffle(env_cycle)
++
++            take = min(n - len(sampled_envs), len(env_cycle))
++            sampled_envs.extend(env_cycle[:take])
++            env_cycle = env_cycle[take:]
++
++        self._env_cycle = env_cycle
++        return sampled_envs
+ 
+     def update(self, rollouts: list[vf.RolloutOutput]):
+         """Updates buffer state with completed rollouts."""
+@@ -201,6 +234,7 @@ class Buffer:
+ 
+     def load(self, path: Path) -> None:
+         """Loads pool assignments and rollouts from checkpoint."""
++        self._env_cycle = []
+ 
+         def read_jsonl(filepath: Path) -> list[dict]:
+             with open(filepath, "r") as f:
+@@ -320,4 +354,11 @@ class Buffer:
+         for eb in self.env_buffers.values():
+             metrics.update(eb.get_metrics())
+ 
++        sampled_total = sum(self.num_sampled_examples_per_step.values())
++        for env_name in self.env_names:
++            metrics[f"sampled_env_ratio/{env_name}"] = (
++                self.num_sampled_examples_per_step[env_name] / sampled_total if sampled_total > 0 else 0.0
++            )
++            self.num_sampled_examples_per_step[env_name] = 0
++
+         return metrics
+diff --git a/tests/unit/orchestrator/test_buffer.py b/tests/unit/orchestrator/test_buffer.py
+index e7d2b038c..76c04693e 100644
+--- a/tests/unit/orchestrator/test_buffer.py
++++ b/tests/unit/orchestrator/test_buffer.py
+@@ -231,3 +231,54 @@ def test_buffer_no_cross_env_pool_assignment(mock_openai_client, tmp_path):
+ 
+     assert len(new_buffer.env_buffers["env_b"].easy_examples) == 0
+     assert new_buffer.env_buffers["env_b"].num_normal == 1
++
++
++def test_round_robin_balances_draws(dummy_envs):
++    buffer = Buffer(dummy_envs, BufferConfig(env_sampling_strategy="round_robin", seed=123))
++
++    counts = {env: 0 for env in dummy_envs.names}
++    for sample in buffer.sample_examples(20):
++        counts[sample["env_name"]] += 1
++
++    assert counts == {"env_a": 10, "env_b": 10}
++
++
++def test_round_robin_skips_empty_env(dummy_envs):
++    buffer = Buffer(dummy_envs, BufferConfig(env_sampling_strategy="round_robin", seed=123))
++
++    buffer.env_buffers["env_b"].examples.clear()
++
++    assert all(sample["env_name"] == "env_a" for sample in buffer.sample_examples(6))
++
++
++def test_round_robin_rejects_env_ratios(mock_openai_client, dummy_dataset):
++    env_a = vf.SingleTurnEnv(client=mock_openai_client, model="test-model", dataset=dummy_dataset, rubric=vf.Rubric())
++    env_b = vf.SingleTurnEnv(client=mock_openai_client, model="test-model", dataset=dummy_dataset, rubric=vf.Rubric())
++    envs = make_envs(
++        {
++            "env_a": make_env("env_a", env_a, ratio=0.8),
++            "env_b": make_env("env_b", env_b, ratio=0.2),
++        }
++    )
++
++    with pytest.raises(ValueError, match="env ratios are only supported"):
++        Buffer(envs, BufferConfig(env_sampling_strategy="round_robin"))
++
++
++def test_sampled_env_ratio_metrics(dummy_envs):
++    buffer = Buffer(dummy_envs, BufferConfig(env_sampling_strategy="round_robin", seed=123))
++
++    buffer.sample_examples(4)
++    metrics = buffer.get_metrics()
++
++    assert metrics["sampled_env_ratio/env_a"] == 0.5
++    assert metrics["sampled_env_ratio/env_b"] == 0.5
++
++
++def test_sampled_env_ratio_zero_when_no_samples(dummy_envs):
++    buffer = Buffer(dummy_envs, BufferConfig())
++
++    metrics = buffer.get_metrics()
++
++    assert metrics["sampled_env_ratio/env_a"] == 0.0
++    assert metrics["sampled_env_ratio/env_b"] == 0.0

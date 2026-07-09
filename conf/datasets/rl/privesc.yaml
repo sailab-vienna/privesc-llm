@@ -1,0 +1,4 @@
+output_dir: "outputs/data/privesc_rl"
+write_test: true
+train_multiplier: 128
+test_multiplier: 8

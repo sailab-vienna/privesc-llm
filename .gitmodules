@@ -1,0 +1,15 @@
+[submodule "benchmark-privesc-linux"]
+	path = external/benchmark-privesc-linux
+	url = https://github.com/ipa-lab/benchmark-privesc-linux.git
+[submodule "GTFOBins"]
+	path = external/GTFOBins
+	url = https://github.com/GTFOBins/GTFOBins.github.io.git
+[submodule "prime-rl"]
+	path = external/prime-rl
+	url = https://github.com/PrimeIntellect-ai/prime-rl.git
+[submodule "chainreactor"]
+	path = external/chainreactor
+	url = https://github.com/ucsb-seclab/chainreactor.git
+[submodule "powerlifted-src"]
+	path = external/.powerlifted-src
+	url = https://github.com/peperunas/planner8.git

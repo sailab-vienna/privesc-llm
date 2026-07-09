@@ -1,0 +1,15 @@
+# @package datasets.sft
+
+defaults:
+  - /datasets/sft/common@_here_: base
+  - /datasets/sft/split@_here_: validation
+  - _self_
+
+profile: standard
+regime: unguided
+teacher: deepseek
+teacher_model: deepseek/deepseek-v4-flash
+trace_root: outputs/traces/trace_collection/${datasets.sft.profile}/${datasets.sft.regime}/${datasets.sft.teacher}/${datasets.sft.reasoning_variant}
+output_dir: ${oc.env:SFT_VAL_DATA_DIR,outputs/data/privesc_sft/${datasets.sft.profile}/${datasets.sft.regime}/${datasets.sft.teacher}/${datasets.sft.reasoning_variant}/validation}
+source_dir: validation
+exclude_source_dir: training

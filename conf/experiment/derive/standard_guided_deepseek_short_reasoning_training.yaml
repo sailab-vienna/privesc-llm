@@ -1,0 +1,18 @@
+# @package _global_
+
+defaults:
+  - override /agent: openai
+  - override /datasets/sft: collection/standard/training
+  - override /datasets/sft/quality: guided
+  - override /datasets/sft/regime: guided
+  - override /datasets/sft/teacher: deepseek
+  - override /reasoning_variant_derivation: short_reasoning
+
+agent:
+  api_base: ${oc.env:OPENAI_API_BASE,https://openrouter.ai/api/v1}
+  api_key: ${oc.env:OPENAI_API_KEY,${oc.env:OPENAI_KEY,default}}
+  model: ${datasets.sft.teacher_model}
+
+datasets:
+  sft:
+    reasoning_variant: ${reasoning_variant_derivation.variant}

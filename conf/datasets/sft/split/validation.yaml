@@ -1,0 +1,4 @@
+# @package datasets.sft
+
+fail_on_split_collision: true
+max_per_generator: 20

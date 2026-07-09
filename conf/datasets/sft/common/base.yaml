@@ -1,0 +1,13 @@
+# @package datasets.sft
+
+no_plots: false
+prune: false
+teacher_model: null
+model_name: null
+reasoning_variant: long_reasoning
+validation_output_dir: null
+trace_root: null
+source_dir: null
+exclude_source_dir: null
+max_per_generator: null
+fail_on_split_collision: false

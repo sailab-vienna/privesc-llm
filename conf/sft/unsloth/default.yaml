@@ -1,0 +1,45 @@
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 4
+
+load_in_4bit: true
+load_in_8bit: false
+full_finetuning: false
+use_lora: true
+
+target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+  - lm_head
+use_gradient_checkpointing: unsloth
+
+# If true and lm_head is targeted, use vanilla PEFT LoRA for lm_head so the
+# saved checkpoint contains adapter weights only.
+adapter_only_lm_head: false
+ensure_weight_tying: false
+
+warmup_steps: 0
+eval_strategy: epoch
+eval_steps: null
+eval_on_start: false
+prediction_loss_only: false
+logging_steps: 1
+optim: adamw_8bit
+adam_beta2: 0.95
+weight_decay: 0.0
+lr_scheduler_type: linear
+report_to: wandb
+wandb_project: privesc-llm-unsloth-sft
+wandb_run_name: null
+save_strategy: epoch
+save_steps: 1
+
+# Optional override for smoke tests.
+max_steps: null
+
+packing: true
+dataset_num_proc: 4

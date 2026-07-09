@@ -1,0 +1,9 @@
+# @package _global_
+
+defaults:
+  - override /datasets/sft: collection/standard/training
+  - override /datasets/sft/quality: guided
+  - override /generators: training
+  - override /runner: trace_collection/standard_training
+  - override /datasets/sft/regime: guided
+  - override /datasets/sft/teacher: deepseek

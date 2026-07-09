@@ -1,0 +1,7 @@
+defaults:
+  - default
+
+load_in_4bit: true
+load_in_8bit: false
+full_finetuning: false
+use_lora: true

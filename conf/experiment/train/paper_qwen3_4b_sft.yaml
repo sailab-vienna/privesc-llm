@@ -1,0 +1,57 @@
+# @package _global_
+
+defaults:
+  - override /sft: qwen3_4b
+  - override /sft/unsloth: qwen3_4b
+
+datasets:
+  sft:
+    output_dir: ${oc.env:SFT_TRAIN_DATA_DIR,outputs/data/privesc_sft/${datasets.sft.profile}/${datasets.sft.regime}/${datasets.sft.teacher}/${datasets.sft.reasoning_variant}/training}
+    validation_output_dir: ${oc.env:SFT_VAL_DATA_DIR,outputs/data/privesc_sft/${datasets.sft.profile}/${datasets.sft.regime}/${datasets.sft.teacher}/${datasets.sft.reasoning_variant}/validation}
+
+sft:
+  model_name: Qwen/Qwen3-4B-Instruct-2507
+  output_dir: ${oc.env:SFT_OUTPUT_ROOT,outputs/models/sft}/paper_qwen3_4b_sft
+  run_dir: ${oc.env:SFT_RUN_DIR,null}
+  max_seq_length: 32768
+  learning_rate: 1.5e-4
+  lora_rank: 8
+  lora_alpha: 32
+  batch_size: 8
+  num_train_epochs: 10
+  seed: 1337
+  unsloth:
+    load_in_4bit: true
+    load_in_8bit: false
+    full_finetuning: false
+    use_lora: true
+    per_device_train_batch_size: 2
+    gradient_accumulation_steps: 4
+    target_modules:
+      - q_proj
+      - k_proj
+      - v_proj
+      - o_proj
+      - gate_proj
+      - up_proj
+      - down_proj
+      - lm_head
+    use_gradient_checkpointing: unsloth
+    adapter_only_lm_head: true
+    ensure_weight_tying: true
+    warmup_steps: 0
+    eval_strategy: epoch
+    logging_steps: 1
+    optim: adamw_8bit
+    adam_beta2: 0.95
+    weight_decay: 0.0
+    lr_scheduler_type: linear
+    report_to: wandb
+    wandb_project: privesc-llm-unsloth-sft
+    wandb_run_name: null
+    save_strategy: epoch
+    save_steps: 1
+
+hydra:
+  run:
+    dir: ${sft.output_dir}/${oc.env:SFT_RUN_GROUP,local}/${now:%Y-%m-%d_%H-%M-%S}

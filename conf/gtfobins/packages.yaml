@@ -1,0 +1,238 @@
+# Mapping from GTFOBins binary names to Debian packages
+# Used by extract_gtfobins.py to generate docker/procedural/packages.txt
+
+# Shells
+ash: busybox
+bash: bash
+csh: tcsh
+dash: dash
+elvish: elvish
+fish: fish
+rc: rc
+sash: sash
+tcsh: tcsh
+yash: yash
+zsh: zsh
+
+# Coreutils / util-linux
+choom: util-linux
+chroot: coreutils
+chrt: util-linux
+env: coreutils
+flock: util-linux
+ionice: util-linux
+nice: coreutils
+nohup: coreutils
+setarch: util-linux
+split: coreutils
+stdbuf: coreutils
+time: time
+timeout: coreutils
+unshare: util-linux
+
+# Findutils
+find: findutils
+xargs: findutils
+
+# Text editors
+ed: ed
+ex: vim
+joe: joe
+nano: nano
+vi: vim
+
+# Programming languages
+R: r-base
+clisp: clisp
+cobc: gnucobol
+gawk: gawk
+guile: guile-3.0
+julia: null  # not in Debian repos (requires external install)
+lua: lua5.4
+mawk: mawk
+node: nodejs
+octave: octave
+perl: perl
+php: php
+python: python3
+ruby: ruby
+tclsh: tcl
+
+# Development tools
+cabal: cabal-install
+distcc: distcc
+forge: golang
+gdb: gdb
+git: git
+gnuplot: gnuplot
+gtester: libglib2.0-dev
+hg: mercurial
+jrunscript: default-jdk
+make: make
+strace: strace
+
+# Text processing
+dc: dc
+enscript: enscript
+groff: groff
+ispell: ispell
+less: less
+more: util-linux
+pic: groff
+sed: sed
+
+# Document processing
+dvips: texlive-binaries
+latex: texlive-latex-base
+pdflatex: texlive-latex-base
+pdftex: texlive-binaries
+tex: texlive-binaries
+
+# Network tools
+ftp: ftp
+hping3: hping3
+iftop: iftop
+ip: iproute2
+lftp: lftp
+mail: mailutils
+mysql: mariadb-client
+ncftp: ncftp
+nmap: nmap
+openvpn: openvpn
+psql: postgresql-client
+rsync: rsync
+scp: openssh-client
+sftp: openssh-client
+socat: socat
+ssh: openssh-client
+ssh-agent: openssh-client
+sshpass: sshpass
+telnet: telnet
+wget: wget
+
+# System tools
+aa-exec: apparmor
+agetty: util-linux
+apt-get: apt
+busctl: systemd
+capsh: libcap2-bin
+cpulimit: cpulimit
+debugfs: e2fsprogs
+dmsetup: dmsetup
+docker: docker.io
+expect: expect
+fzf: fzf
+ginsh: ginac-tools
+ld.so: libc-bin
+logsave: e2fsprogs
+lxd: lxd
+man: man-db
+minicom: minicom
+msgfilter: gettext
+multitime: multitime
+ncdu: ncdu
+nsenter: util-linux
+perf: linux-perf
+pexec: pexec
+pg: postgresql-client
+pidstat: sysstat
+plymouth: plymouth
+psftp: putty-tools
+restic: restic
+rlwrap: rlwrap
+rpm: rpm
+rpmdb: rpm
+rpmquery: rpm
+rpmverify: rpm
+rtorrent: rtorrent
+run-parts: debianutils
+runscript: openrc
+scanmem: scanmem
+script: util-linux
+scrot: scrot
+setlock: daemontools
+slsh: slsh
+softlimit: daemontools
+sqlite3: sqlite3
+start-stop-daemon: dpkg
+systemctl: systemd
+tar: tar
+task: taskwarrior
+tasksh: taskwarrior
+tdbtool: tdb-tools
+tmate: tmate
+tmux: tmux
+watch: procps
+xdotool: xdotool
+zip: zip
+
+# Specialized/exotic (may not be in standard repos)
+asterisk: null  # not in bookworm-slim repos
+ctr: containerd
+csvtool: csvtool
+
+# Additional sudo/capabilities binaries
+ansible-playbook: ansible
+ansible-test: ansible
+aoss: alsa-oss
+at: at
+bconsole: bacula-console
+borg: borgbackup
+bpftrace: bpftrace
+bundle: ruby-bundler
+cdist: cdist
+certbot: certbot
+check_by_ssh: nagios-plugins-contrib
+check_ssl_cert: nagios-plugins-contrib
+cmake: cmake
+composer: composer
+cpio: cpio
+dhclient: isc-dhcp-client
+doas: doas
+dotnet: null  # requires Microsoft apt repository
+dpkg: dpkg
+easyrsa: easy-rsa
+emacs: emacs
+gcc: gcc
+gem: ruby
+ghc: ghc
+ghci: ghc
+grc: grc
+java: default-jdk
+jjs: default-jdk
+jtag: openocd
+ksu: krb5-user
+latexmk: latexmk
+loginctl: systemd
+logrotate: logrotate
+ltrace: null  # not available for arm64 in Debian 12
+mosh-server: mosh
+neofetch: neofetch
+npm: npm
+nroff: groff
+opkg: null  # OpenWrt package manager, not in Debian repos
+perlbug: perl
+pip: python3-pip
+pkexec: policykit-1
+posh: posh
+puppet: puppet
+pwsh: null  # requires Microsoft apt repository
+ranger: ranger
+screen: screen
+service: init-system-helpers
+sg: login  # sg command is in the 'login' package (from shadow source)
+smbclient: smbclient
+su: login
+sudo: sudo
+taskset: util-linux
+top: procps
+torify: torsocks
+torsocks: torsocks
+valgrind: valgrind
+xdg-user-dir: xdg-user-dirs
+yarn: yarnpkg
+zathura: zathura
+zypper: null
+
+# Binaries without direct Debian package (set to null to skip)
+genie: null

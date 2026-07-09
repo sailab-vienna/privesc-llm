@@ -1,0 +1,22 @@
+# @package _global_
+
+defaults:
+  - override /datasets/sft: collection/standard/validation
+  - override /datasets/sft/quality: guided
+  - override /generators: holdout
+  - override /runner: trace_collection/standard_validation
+  - override /prompts: trace_collection_guided
+  - override /agent: openai
+  - override /agent/params: deepseek_guided
+  - override /datasets/sft/regime: guided
+  - override /datasets/sft/teacher: deepseek
+  - override /generators/decoys: "off"
+
+agent:
+  api_base: ${oc.env:OPENAI_API_BASE,https://openrouter.ai/api/v1}
+  api_key: ${oc.env:OPENAI_API_KEY,${oc.env:OPENAI_KEY,default}}
+  model: ${datasets.sft.teacher_model}
+  max_turns: ${datasets.sft.quality.max_turns}
+  context_management:
+    enabled: false
+    max_len: 1000000

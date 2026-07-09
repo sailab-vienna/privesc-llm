@@ -1,0 +1,48 @@
+diff --git a/facts_extractor.py b/facts_extractor.py
+index ca52c84..908a362 100755
+--- a/facts_extractor.py
++++ b/facts_extractor.py
+@@ -107,7 +107,7 @@ def main():
+             facts_container = dill.load(f)
+     else:
+         if args.u and args.k:
+-            connector = SSHConnector(host, args.u, Path(args.k))
++            connector = SSHConnector(host, args.u, Path(args.k), port=port)
+         elif args.l:
+             connector = ListenConnector(port)
+         else:
+diff --git a/modules/connectors.py b/modules/connectors.py
+index d13aba5..692ada2 100644
+--- a/modules/connectors.py
++++ b/modules/connectors.py
+@@ -267,7 +267,9 @@ class RemoteConnector(Connector):
+ 
+ 
+ class SSHConnector(Connector):
+-    def __init__(self, remote: str, user: str, private_key: Path):
++    def __init__(
++        self, remote: str, user: str, private_key: Path, port: int = 22
++    ):
+         super().__init__()
+ 
+         if not private_key.exists():
+@@ -278,6 +280,7 @@ class SSHConnector(Connector):
+         self.remote: str = remote
+         self.user: str = user
+         self.private_key: Path = private_key
++        self.port: int = port
+ 
+     def is_connected(self) -> bool:
+         if not self.tube.get_transport():
+@@ -298,7 +301,10 @@ class SSHConnector(Connector):
+             self._logger.info("Attempting SSH connection...")
+ 
+             self.tube.connect(
+-                self.remote, username=self.user, key_filename=str(self.private_key)
++                self.remote,
++                port=self.port,
++                username=self.user,
++                key_filename=str(self.private_key),
+             )
+         except Exception as e:
+             self.tube = SSHClient()

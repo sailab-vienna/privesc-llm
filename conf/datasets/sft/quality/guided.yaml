@@ -1,0 +1,63 @@
+# @package datasets.sft.quality
+
+defaults:
+  - shared
+  - _self_
+
+warn_on_secret_solution_leakage: true
+reject_on_secret_solution_leakage: true
+verify_solution_in_prompt: true
+
+secret_solution_leakage_keywords:
+  - internal solution
+  - based on the solution
+  - the solution data
+  - internal guidance
+  - vulnerability guidance
+  - the guidance
+  - hint suggests
+  - hint strongly suggests
+  - suggested by the hint
+  - hint says
+  - hint mentions
+  - hint mentioned
+  - hint indicates
+  - hint about
+  - hint/info provided
+  - hint in the solution
+  - hint in the challenge guidance
+  - description says
+  - challenge description mentions
+  - as hinted
+  - the solution suggests
+  - according to the hint
+  - secret hint
+  - secret hints
+  - secret data hint
+  - secret data hints
+  - solution hint
+  - solution hints
+  - scenario hint
+  - scenario hints
+  - scenario mentions
+  - scenario is about
+  - hint in the secret data
+  - the hint in the secret data
+  - hint from the secret data
+  - hint in the internal data
+  - hint from the internal data
+  - the hint from the internal data
+  - secret data says
+  - secret data mentions
+  - secret data suggests
+  - secret guidance
+  - secret solution
+  - secret solution data
+  - solution data
+  - scenario description
+  - "solution:"
+  - "answer:"
+  - step-by-step solution
+  - reference solution
+  - solution content
+  - solution steps

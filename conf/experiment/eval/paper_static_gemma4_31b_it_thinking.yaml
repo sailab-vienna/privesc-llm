@@ -1,0 +1,15 @@
+# @package _global_
+
+defaults:
+  - /experiment/eval/paper_static_local_vllm_base
+
+agent:
+  params:
+    temperature: 0.7
+    top_p: 0.95
+    extra_body:
+      chat_template_kwargs:
+        enable_thinking: true
+
+runner:
+  output_dir: outputs/evals/paper_static_gemma4_31b_it_thinking

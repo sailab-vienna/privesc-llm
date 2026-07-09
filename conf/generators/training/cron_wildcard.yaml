@@ -1,0 +1,26 @@
+# @package generators
+
+cron_backup_dirs:
+  - archives
+  - tarballs
+  - bundles
+  - exports
+  - packages
+  - reports
+  - logs
+  - dumps
+
+cron_wildcard:
+  archive_path: /var/spool/archives/daily.tar.gz
+  job_directory: /etc/cron.d
+  job_names:
+    - tar_archive
+    - user_archive
+    - archive_pack
+    - file_archive
+    - nightly_tar
+    - home_archive
+    - archive_rotate
+    - data_archive
+  wait_seconds: 65
+  exploit_script_name: stage.sh

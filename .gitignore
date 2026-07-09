@@ -1,0 +1,42 @@
+.DS_Store
+*.py[cod]
+__pycache__/
+.env
+.venv/
+.uv-cache/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.tmp/
+.vscode/
+*.swp
+*.swo
+
+# Runtime products are released separately as the outputs artifact.
+outputs/
+wandb/
+logs/
+multirun/
+test_output/
+
+# Generated manuscript build products.
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+*.out
+*.toc
+*.lof
+*.lot
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+
+# Rebuild if needed from external/.powerlifted-src.
+external/powerlifted/
+
+# Local-only release staging; upload manually after review.
+release/hf-staging/

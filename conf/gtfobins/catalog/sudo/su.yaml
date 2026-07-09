@@ -1,0 +1,4 @@
+name: su
+binary_path: /usr/bin/su
+exploit_cmds:
+- sudo /usr/bin/su -c /bin/sh

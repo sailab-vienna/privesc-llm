@@ -1,0 +1,7 @@
+defaults:
+  - default
+  - _self_
+
+system_template: trace_collection.jinja
+template_vars:
+  include_solution_guidance: false

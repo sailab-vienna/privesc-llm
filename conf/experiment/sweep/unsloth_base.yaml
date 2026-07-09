@@ -1,0 +1,16 @@
+# @package _global_
+defaults:
+  - override /sft: qwen3_4b
+  - override /sft/unsloth: qwen3_4b
+
+sft:
+  max_seq_length: 32768
+  num_train_epochs: 10
+  output_dir: ${oc.env:SFT_OUTPUT_ROOT,outputs/models/sft}/sweep_unsloth
+  unsloth:
+    report_to: wandb
+    adapter_only_lm_head: true
+
+hydra:
+  run:
+    dir: ${sft.output_dir}/${oc.env:SFT_RUN_GROUP,local}/${now:%Y-%m-%d_%H-%M-%S}

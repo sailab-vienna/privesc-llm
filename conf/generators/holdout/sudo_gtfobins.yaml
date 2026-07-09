@@ -1,0 +1,33 @@
+# @package generators
+
+sudo_gtfobins:
+  grant_subjects:
+    - user
+    - "%ops"
+    - "%maintainers"
+    - "%release"
+
+sudo_allowlist:
+  - dash
+  - lua
+  - make
+  - sqlite3
+
+sudo_layout:
+  sudoers_file_names:
+    - field-ops
+    - emergency-access
+  decoy_path_templates:
+    - /opt/admin/bin/{name}
+    - /srv/ops/sbin/{name}
+  decoy_wrappers:
+    - audit-export
+    - cache-report
+    - config-diff
+    - deploy-plan
+    - journal-tail
+    - mirror-status
+    - package-plan
+    - release-check
+  decoy_count_min: 1
+  decoy_count_max: 2

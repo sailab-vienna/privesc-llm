@@ -1,0 +1,48 @@
+# @package generators
+
+suid_allowlist:
+  - pidstat
+  - chrt
+  - zsh
+
+suid_layout:
+  decoy_path_templates:
+    - /opt/{service}/libexec/{binary}
+    - /var/lib/{service}/bin/{binary}
+  service_names:
+    - auditd
+    - spooler
+    - sessiond
+    - patchmgr
+    - artifactd
+    - rotated
+  decoy_source_paths:
+    - /bin/true
+    - /bin/echo
+    - /usr/bin/uptime
+    - /usr/bin/seq
+    - /usr/bin/realpath
+    - /usr/bin/nproc
+  decoy_count_min: 10
+  decoy_count_max: 12
+  decoy_binaries:
+    - archive-check
+    - cert-renewal
+    - config-sync
+    - dataset-prune
+    - heartbeat-send
+    - index-refresh
+    - journal-pack
+    - mirror-poll
+    - quota-report
+    - release-fetch
+    - session-prune
+    - spool-flush
+    - state-verify
+    - ticket-export
+    - tmpfile-sweep
+    - upload-stage
+    - vault-refresh
+    - worker-drain
+    - zone-audit
+    - zone-sync

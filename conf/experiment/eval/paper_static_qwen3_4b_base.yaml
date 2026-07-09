@@ -1,0 +1,7 @@
+# @package _global_
+
+defaults:
+  - /experiment/eval/paper_static_local_vllm_base
+
+runner:
+  output_dir: outputs/evals/paper_static_qwen3_4b_base

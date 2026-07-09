@@ -1,0 +1,25 @@
+diff --git a/src/prime_rl/orchestrator/orchestrator.py b/src/prime_rl/orchestrator/orchestrator.py
+index bc1128ebc..176c5f6f9 100644
+--- a/src/prime_rl/orchestrator/orchestrator.py
++++ b/src/prime_rl/orchestrator/orchestrator.py
+@@ -650,6 +650,9 @@ async def orchestrate(config: OrchestratorConfig):
+ 
+         # Group by (env_name, example_id) to average across rollouts within each problem
+         by_example = results_df.groupby(["env_name", "example_id"])
++        # Some metrics are env-specific; only emit global metrics present for every sampled example.
++        metrics_by_example = metrics_df.groupby([results_df.env_name, results_df.example_id]).mean()
++        complete_metrics_by_example = metrics_by_example.dropna(axis="columns")
+ 
+         solve_none, solve_all, effective_batch_size = compute_solve_rates(results_df)
+         to_log = {
+@@ -705,6 +708,10 @@ async def orchestrate(config: OrchestratorConfig):
+             # Rollout filter metrics (detection rate per filter + overall drop rate)
+             "filters/all/is_filtered": results_df.is_filtered.astype(float).mean(),
+             **{f"filters/all/{name}": filter_df[name].astype(float).mean() for name in filter_df.columns},
++            **{
++                f"metrics/all/{metric}": complete_metrics_by_example[metric].mean()
++                for metric in complete_metrics_by_example.columns
++            },
+             # W&B axis
+             "step": progress.step,
+         }

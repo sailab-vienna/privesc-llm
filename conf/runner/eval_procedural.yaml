@@ -1,0 +1,24 @@
+defaults:
+  - base
+  - _self_
+
+# Procedural scenario evaluation - generates scenarios dynamically
+mode: evaluation
+runs_per_item: 20
+output_dir: outputs/evals/eval_procedural
+workers: 1  # Set >1 for parallel execution
+
+source:
+  type: procedural
+  seed: 42
+  generators:
+    - capabilities_gtfobins
+    - suid_gtfobins
+    - sudo_gtfobins
+    - cron_wildcard
+    - cron_writable_script
+    - password_file
+    - password_history
+    - password_reuse
+    - ssh_key_reuse
+    - weak_password

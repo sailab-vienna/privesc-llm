@@ -1,0 +1,4 @@
+name: zsh
+binary_path: /usr/bin/zsh
+exploit_cmds:
+- sudo /usr/bin/zsh

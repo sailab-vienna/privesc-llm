@@ -1,0 +1,5 @@
+# @package _global_
+
+defaults:
+  - /experiment/derive/standard_guided_deepseek_no_reasoning_training
+  - override /datasets/sft: collection/standard/validation

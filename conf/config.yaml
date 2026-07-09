@@ -1,0 +1,31 @@
+defaults:
+  - scenarios@scenario: 01_vuln_suid_gtfo
+  - ssh: env
+  - agent: openai
+  - optional agent/params: null
+  - runner: eval_benchmark
+  - prompts: evaluation
+  - datasets/sft/quality: unguided
+  - datasets/sft: collection/standard/training
+  - datasets/sft/regime: unguided
+  - datasets/sft/teacher: deepseek
+  - reasoning_variant_derivation: no_reasoning
+  - datasets/rl: privesc
+  - sft: default
+  - sft/trl: default
+  - sft/unsloth: default
+  - rl: default
+  - rl/prime_rl: default
+  - reward: default
+  - gtfobins: default
+  - generators: default
+  - generators/decoys: "off"
+  - _self_
+
+seed: 42
+log_level: INFO
+log_format: "%(asctime)s [%(name)s:%(levelname)s] %(message)s"
+
+hydra:
+  run:
+    dir: outputs/runs/${now:%Y-%m-%d/%H-%M-%S}/

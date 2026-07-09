@@ -1,0 +1,8 @@
+# @package _global_
+
+defaults:
+  - override /runner: paper_benchmark
+
+agent:
+  params:
+    max_tokens: 2048

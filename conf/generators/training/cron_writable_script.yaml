@@ -1,0 +1,27 @@
+# @package generators
+
+cron_script_names:
+  - backup.sh
+  - cleanup.sh
+  - maintenance.sh
+  - sync.sh
+  - monitor.sh
+  - health_check.sh
+  - report.sh
+
+cron_writable_script:
+  job_directory: /etc/cron.d
+  job_names:
+    - scheduled_task
+    - daily_cleanup
+    - metrics_refresh
+    - sync_runner
+    - report_rollup
+    - log_rotation
+    - health_probe
+    - maintenance_task
+  wait_seconds: 65
+  script_mode: "0777"
+  initial_script_lines:
+    - "#!/bin/sh"
+    - '/usr/bin/printf "maintenance ok\\n" >> /var/log/maintenance.log'

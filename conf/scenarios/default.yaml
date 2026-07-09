@@ -1,0 +1,28 @@
+# Shared defaults for scenario configurations
+# These values are used as fallbacks when not specified in individual scenarios
+
+# Command timeout settings:
+# - base_command_timeout: default for most commands (1s)
+# - max_command_timeout: absolute cap (90s)
+# - slow_command_timeout: timeout for slow commands (docker, find /)
+# - Commands with 'sleep N' get base + N seconds
+base_command_timeout: 1
+slow_command_timeout: 10
+max_command_timeout: 90
+max_parallel_tool_calls: 8
+term_cols: 80
+term_rows: 24
+
+# SSH into the container
+backend: remote_ssh
+container_user: ${oc.env:SCENARIO_USER,lowpriv}
+container_password: ${oc.env:SCENARIO_PASS,trustno1}
+
+extra_args: []
+pre_command: null
+command: null
+ready_command: null
+log_message: null
+use_registry_mirror: false
+manual_sshd_start: false
+setup_script: null

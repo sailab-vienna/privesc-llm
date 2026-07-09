@@ -1,0 +1,13 @@
+Rewrite each `assistant_rewrites` item into concise SFT reasoning.
+
+**Rewrite Rules:**
+- Return one `assistant_reasoning` item per input `message_index`.
+- Use only that item's `source_reasoning` and `tool_calls`; do not borrow facts from other items.
+- Compress, do not add facts, commands, observations, outcomes, credentials, or root access.
+- Keep each `short_reasoning` one to three plain sentences.
+- Do not include markdown, bullets, XML, `<think>` tags, or chain-of-thought narration.
+
+---
+
+**Output Format:**
+Output only the requested structured JSON response with top-level `assistant_reasoning`.

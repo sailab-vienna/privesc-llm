@@ -1,0 +1,8 @@
+# @package reasoning_variant_derivation
+
+variant: short_reasoning
+source_variant: long_reasoning
+source_trace_root: null
+output_trace_root: null
+workers: 8
+incremental: false

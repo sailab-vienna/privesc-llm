@@ -1,0 +1,52 @@
+# @package generators
+
+lowpriv_first_names:
+  - Adrian
+  - Aylin
+  - Carla
+  - Dario
+  - Esther
+  - Fatima
+  - Greta
+  - Henrik
+  - Imani
+  - Jakob
+  - Karla
+  - Linus
+  - Miriam
+  - Oliver
+  - Petra
+  - Rafael
+  - Selina
+  - Tobias
+  - Vera
+  - Yusuf
+
+lowpriv_last_names:
+  - Arnold
+  - Brandt
+  - Conrad
+  - Dietrich
+  - Engel
+  - Faber
+  - Gerber
+  - Heinemann
+  - Jansen
+  - Krueger
+  - Lorenz
+  - Mertens
+  - Noack
+  - Otto
+  - Peters
+  - Reuter
+  - Sommer
+  - Vogel
+  - Winter
+  - Zimmer
+
+lowpriv_username_templates:
+  - "{first}.{last}"
+  - "{first}_{l}"
+  - "{f}{last}"
+  - "{last}{f}"
+  - "{first}{l}"

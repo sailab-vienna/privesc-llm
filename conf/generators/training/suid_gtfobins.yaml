@@ -1,0 +1,69 @@
+# @package generators
+
+suid_allowlist:
+  - bash
+  - capsh
+  - choom
+  - chroot
+  - env
+  - expect
+  - flock
+  - ionice
+  - logsave
+  - multitime
+  - nice
+  - node
+  - pexec
+  - php
+  - rlwrap
+  - rsync
+  - softlimit
+  - sshpass
+  - start-stop-daemon
+  - stdbuf
+  - strace
+  - time
+  - timeout
+  - xargs
+
+suid_layout:
+  decoy_path_templates:
+    - /opt/{service}/libexec/{binary}
+    - /var/lib/{service}/bin/{binary}
+  service_names:
+    - backupd
+    - assetd
+    - logshipper
+    - netdiag
+    - healthcheck
+    - inventoryd
+  decoy_source_paths:
+    - /bin/true
+    - /bin/echo
+    - /usr/bin/uptime
+    - /usr/bin/seq
+    - /usr/bin/realpath
+    - /usr/bin/nproc
+  decoy_count_min: 10
+  decoy_count_max: 12
+  decoy_binaries:
+    - backup-check
+    - backup-status
+    - cache-clean
+    - certificate-check
+    - config-audit
+    - cleanup-helper
+    - host-health
+    - license-check
+    - logrotate-status
+    - metrics-upload
+    - package-audit
+    - repo-sync
+    - report-sync
+    - rotate-logs
+    - service-check
+    - service-health
+    - netdiag-report
+    - inventory-sync
+    - sync-status
+    - update-check

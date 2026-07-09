@@ -1,0 +1,33 @@
+# @package _global_
+
+defaults:
+  - override /runner: eval_procedural
+  - override /prompts: evaluation
+  - override /agent: openai
+  - override /generators: holdout
+
+agent:
+  params:
+    max_tokens: 2048
+
+runner:
+  mode: evaluation
+  runs_per_item: 20
+  max_retries_per_run: 5
+  workers: 10
+  output_dir: outputs/evals/paper_procedural_eval
+  source:
+    type: procedural
+    seed: 1337
+    random_seed: false
+    generators:
+      - capabilities_gtfobins
+      - suid_gtfobins
+      - sudo_gtfobins
+      - cron_wildcard
+      - cron_writable_script
+      - password_file
+      - password_history
+      - password_reuse
+      - ssh_key_reuse
+      - weak_password

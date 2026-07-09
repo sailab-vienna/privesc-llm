@@ -1,0 +1,6 @@
+# @package generators
+
+capabilities_allowlist:
+  - perl
+  - php
+  - ruby

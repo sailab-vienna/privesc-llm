@@ -1,0 +1,5 @@
+# Generator configuration - aggregates the default training profile.
+
+defaults:
+  - training
+  - _self_

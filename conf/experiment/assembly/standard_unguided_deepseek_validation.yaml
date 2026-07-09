@@ -1,0 +1,6 @@
+# @package _global_
+
+defaults:
+  - /experiment/assembly/standard_guided_deepseek_validation
+  - override /datasets/sft/regime: unguided
+  - override /datasets/sft/quality: unguided

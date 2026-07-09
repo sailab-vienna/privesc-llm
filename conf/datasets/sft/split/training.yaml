@@ -1,0 +1,3 @@
+# @package datasets.sft
+
+max_per_generator: 200

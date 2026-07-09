@@ -1,0 +1,8 @@
+reasoning_effort: high
+extra_body:
+  thinking:
+    type: enabled
+  provider:
+    only:
+      - deepseek
+    allow_fallbacks: false

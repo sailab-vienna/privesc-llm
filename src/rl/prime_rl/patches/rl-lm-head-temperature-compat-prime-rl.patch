@@ -1,0 +1,172 @@
+diff --git a/src/prime_rl/trainer/models/layers/lm_head.py b/src/prime_rl/trainer/models/layers/lm_head.py
+index 84556425a..d599c26ce 100644
+--- a/src/prime_rl/trainer/models/layers/lm_head.py
++++ b/src/prime_rl/trainer/models/layers/lm_head.py
+@@ -1,5 +1,6 @@
+ from __future__ import annotations
+ 
++import inspect
+ import types
+ from typing import TypedDict
+ 
+@@ -372,11 +373,16 @@ def _patch_model_forward(model: nn.Module) -> None:
+             slice(-logits_to_keep, None) if isinstance(logits_to_keep, int) and logits_to_keep > 0 else slice(None)
+         )
+ 
+-        # Pass through the wrapped lm_head
++        lm_head_signature = inspect.signature(self.lm_head.forward).parameters
++        lm_head_kwargs = {}
++        if "labels" in lm_head_signature and labels is not None:
++            lm_head_kwargs["labels"] = labels[:, slice_indices]
++        if "temperature" in lm_head_signature and temperature is not None:
++            lm_head_kwargs["temperature"] = temperature[:, slice_indices]
++
+         return self.lm_head(
+             hidden_states[:, slice_indices, :],
+-            labels[:, slice_indices] if labels is not None else None,
+-            temperature=temperature[:, slice_indices] if temperature is not None else None,
++            **lm_head_kwargs,
+         )
+ 
+     # Bind the new forward to the model
+diff --git a/src/prime_rl/trainer/models/layers/lora/base.py b/src/prime_rl/trainer/models/layers/lora/base.py
+index f4f29cb0a..09956a69a 100644
+--- a/src/prime_rl/trainer/models/layers/lora/base.py
++++ b/src/prime_rl/trainer/models/layers/lora/base.py
+@@ -90,6 +90,12 @@ class MultiLoRAModule(nn.Module):
+         # load_state_dict pre-hook to add back prefix (to load base_layer parameters)
+         self.register_load_state_dict_pre_hook(self._pre_load_state_dict_hook)
+ 
++    def __setattr__(self, name: str, value: Any) -> None:
++        if name == "weight" and "base_layer" in self.__dict__.get("_modules", {}):
++            self.base_layer.weight = value
++            return
++        super().__setattr__(name, value)
++
+     @abstractmethod
+     def reset_parameters(self, index: int | None = None) -> None:
+         """Reset LoRA parameters.
+@@ -152,6 +158,14 @@ class MultiLoRAModule(nn.Module):
+         """Forward indexing calls in case the module is a nn.Sequential."""
+         return self.base_layer.__getitem__(key)  # type: ignore[operator]
+ 
++    @property
++    def weight(self) -> Any:
++        return self.base_layer.weight
++
++    @weight.setter
++    def weight(self, value: Any) -> None:
++        self.base_layer.weight = value
++
+     @staticmethod
+     def _post_state_dict_hook(
+         module: nn.Module,
+diff --git a/src/prime_rl/trainer/models/layers/lora/multi_linear.py b/src/prime_rl/trainer/models/layers/lora/multi_linear.py
+index fd9b59e78..0f3debf00 100644
+--- a/src/prime_rl/trainer/models/layers/lora/multi_linear.py
++++ b/src/prime_rl/trainer/models/layers/lora/multi_linear.py
+@@ -1,4 +1,5 @@
+ import math
++from typing import Any
+ 
+ import torch
+ from torch import nn
+@@ -133,7 +134,9 @@ class MultiLoRALinear(MultiLoRAModule):
+         adapted_params = self.base_layer.weight.numel()
+         return adapter_params, adapted_params
+ 
+-    def forward(self, x: torch.Tensor) -> torch.Tensor:
++    def forward(
++        self, x: torch.Tensor, *args: Any, **kwargs: Any
++    ) -> torch.Tensor | dict[str, torch.Tensor]:
+         """
+         x: [..., in_features]
+         """
+@@ -143,7 +144,7 @@ class MultiLoRALinear(MultiLoRAModule):
+         offsets = self._lora_num_tokens.cumsum(dim=0, dtype=torch.int32)
+         assert offsets[-1] == x.shape[0], f"offsets: {offsets}, x.shape: {x.shape}"
+ 
+-        base_out = self.base_layer(x)
++        base_out = self.base_layer(x, *args, **kwargs)
+         lora_x = self.lora_dropout(x)
+ 
+         combined_lora_A = torch.stack([i for i in self.lora_A], dim=0)
+@@ -155,7 +158,21 @@ class MultiLoRALinear(MultiLoRAModule):
+ 
+         # Apply per-token scaling
+-        per_token_scaling = torch.repeat_interleave(self._scaling_factors, self._lora_num_tokens).unsqueeze(-1)
+-        return (base_out + per_token_scaling * lora_out).view(new_shape)
++        per_token_scaling = torch.repeat_interleave(
++            self._scaling_factors, self._lora_num_tokens
++        ).unsqueeze(-1)
++        lora_delta = (per_token_scaling * lora_out).view(new_shape)
++
++        if isinstance(base_out, dict):
++            logits = base_out.get("logits")
++            if logits is None:
++                raise ValueError("LoRA-wrapped layer returned a dict with no 'logits' key.")
++            if logits.shape != new_shape:
++                logits = logits.reshape(new_shape)
++            return {**base_out, "logits": logits + lora_delta}
++
++        if base_out.shape != new_shape:
++            base_out = base_out.reshape(new_shape)
++        return base_out + lora_delta
+ 
+     def __repr__(self) -> str:
+         return (
+diff --git a/tests/unit/train/rl/test_fused_lm_head.py b/tests/unit/train/rl/test_fused_lm_head.py
+index e3149a794..58aaa39a1 100644
+--- a/tests/unit/train/rl/test_fused_lm_head.py
++++ b/tests/unit/train/rl/test_fused_lm_head.py
+@@ -1,9 +1,12 @@
+ import pytest
+ import torch
++import torch.nn as nn
+ from transformers import AutoModelForCausalLM
+ from transformers.models.llama.configuration_llama import LlamaConfig
+ 
+ from prime_rl.trainer.models import cast_float_and_contiguous
++from prime_rl.trainer.models.layers.lora import set_lora_num_tokens, set_multilora_scaling
++from prime_rl.trainer.models.layers.lora.multi_linear import MultiLoRALinear
+ from prime_rl.trainer.models.layers.lm_head import FusedOutputLinear, VanillaOutputLinear, inject_prime_lm_head
+ from prime_rl.trainer.models.llama import LlamaForCausalLM as PrimeRLLlamaForCausalLM
+ from prime_rl.trainer.rl.loss import compute_entropy, selective_log_softmax, shift_tensor_left, shift_tensor_right
+@@ -423,3 +426,37 @@ def test_hf_model_fused_vs_vanilla_matches():
+     # Compare results
+     torch.testing.assert_close(fused_logprobs, vanilla_logprobs, rtol=1e-3, atol=1e-4)
+     torch.testing.assert_close(fused_entropy, vanilla_entropy, rtol=1e-3, atol=1e-4)
++
++
++class DictOutputLinear(nn.Linear):
++    def forward(self, x: torch.Tensor, *args, **kwargs):
++        return {"logits": super().forward(x), "meta": torch.tensor(1.0)}
++
++
++def test_multilora_linear_updates_logits_when_base_layer_returns_dict():
++    set_lora_num_tokens(torch.tensor([2], dtype=torch.int32), reset_reference=True)
++    set_multilora_scaling(torch.tensor([1.0], dtype=torch.bfloat16), reset_reference=True)
++
++    base = DictOutputLinear(4, 4, bias=False)
++    layer = MultiLoRALinear(base, rank=8, n_adapters=1)
++    x = torch.randn(1, 2, 4)
++
++    out = layer(x)
++
++    assert isinstance(out, dict)
++    assert out["logits"].shape == (1, 2, 4)
++    assert out["meta"].item() == 1.0
++
++
++def test_multilora_linear_forwards_weight_assignment_to_base_layer():
++    set_lora_num_tokens(torch.tensor([1], dtype=torch.int32), reset_reference=True)
++    set_multilora_scaling(torch.tensor([1.0], dtype=torch.bfloat16), reset_reference=True)
++
++    base = nn.Linear(4, 4, bias=False)
++    layer = MultiLoRALinear(base, rank=8, n_adapters=1)
++    new_weight = nn.Parameter(torch.randn_like(base.weight))
++
++    layer.weight = new_weight
++
++    assert layer.base_layer.weight is new_weight
++    assert layer.weight is new_weight

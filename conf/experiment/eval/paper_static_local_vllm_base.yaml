@@ -1,0 +1,11 @@
+# @package _global_
+
+defaults:
+  - /experiment/eval/paper_static_base
+
+agent:
+  context_management:
+    max_len: 32768
+
+runner:
+  workers: 20

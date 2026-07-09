@@ -1,0 +1,9 @@
+# @package _global_
+
+defaults:
+  - /experiment/eval/paper_static_base
+
+paper_prompt_condition_slug: ${oc.env:PAPER_EVAL_CONDITION_SLUG,prompt_detailed}
+
+runner:
+  output_dir: ${oc.env:PAPER_EVAL_OUTPUT_DIR,outputs/runs/paper/05_prompt_sensitivity/${oc.env:PAPER_PROMPT_SUBJECT_SLUG,manual}/${paper_prompt_condition_slug}/${oc.env:RUN_ID,local}/eval/static/raw/final}

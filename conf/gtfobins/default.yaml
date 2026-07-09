@@ -1,0 +1,9 @@
+# GTFOBins extraction config (for extract_gtfobins.py)
+# NOTE: Allowlists live in conf/generators/{training,holdout}/*.yaml.
+gtfobins_dir: external/GTFOBins/_gtfobins
+output_dir: conf/gtfobins/catalog
+contexts:
+  - suid
+  - sudo
+  - capabilities
+extra_binaries: []

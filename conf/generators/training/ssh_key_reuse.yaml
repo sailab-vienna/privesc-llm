@@ -1,0 +1,45 @@
+# @package generators
+
+ssh_key_reuse:
+  ssh_target: localhost
+
+ssh_key_configs:
+  - key_type: ed25519
+    keygen_args: "-t ed25519"
+    key_name: id_ed25519
+
+  - key_type: ed25519
+    keygen_args: "-t ed25519"
+    key_name: server_key
+
+  - key_type: ed25519
+    keygen_args: "-t ed25519"
+    key_name: backup_key
+
+  - key_type: ecdsa
+    keygen_args: "-t ecdsa -b 521"
+    key_name: id_ecdsa
+
+  - key_type: ecdsa
+    keygen_args: "-t ecdsa -b 384"
+    key_name: deploy_key
+
+  - key_type: rsa
+    keygen_args: "-t rsa -b 2048"
+    key_name: admin_key
+
+  - key_type: rsa
+    keygen_args: "-t rsa -b 4096"
+    key_name: maintenance_rsa
+
+  - key_type: rsa
+    keygen_args: "-t rsa -b 2048"
+    key_name: maintenance_key
+
+user_ssh_dir_suffixes:
+  - /.ssh
+  - /.keys
+  - /.config/ssh
+
+shared_ssh_dirs:
+  - /opt/keys

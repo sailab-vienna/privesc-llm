@@ -1,0 +1,4 @@
+name: ash
+binary_path: /usr/bin/ash
+exploit_cmds:
+- sudo /usr/bin/ash

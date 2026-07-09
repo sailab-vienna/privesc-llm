@@ -1,0 +1,4 @@
+name: csh
+binary_path: /usr/bin/csh
+exploit_cmds:
+- /usr/bin/csh -b

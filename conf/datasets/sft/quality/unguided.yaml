@@ -1,0 +1,11 @@
+# @package datasets.sft.quality
+
+defaults:
+  - shared
+  - _self_
+
+warn_on_secret_solution_leakage: false
+reject_on_secret_solution_leakage: false
+verify_solution_in_prompt: false
+
+secret_solution_leakage_keywords: []

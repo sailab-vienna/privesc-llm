@@ -1,0 +1,22 @@
+defaults:
+  - paper_protocol
+  - _self_
+
+output_dir: outputs/evals/paper_baselines/static
+runs_per_item: 10
+
+source:
+  type: static
+  scenarios:
+    - 01_vuln_suid_gtfo
+    - 02_vuln_password_in_shell_history
+    - 03_vuln_sudo_no_password
+    - 05_vuln_sudo_gtfo
+    - 06_vuln_docker
+    - 07_root_password_reuse_mysql
+    - 08_root_password_reuse
+    - 09_root_password_root
+    - 10_root_allows_lowpriv_to_ssh
+    - 11_cron_calling_user_wildcard
+    - 12_cron_calling_user_file
+    - 13_file_with_root_password

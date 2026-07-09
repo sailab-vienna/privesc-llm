@@ -1,0 +1,58 @@
+# @package _global_
+
+rl:
+  backend: prime_rl
+  prime_rl:
+    base_model: ${oc.env:PRIME_RL_BASE_MODEL,Qwen/Qwen3-4B-Instruct-2507}
+    init_adapter_path: ${oc.env:PRIME_RL_INIT_ADAPTER_PATH,""}
+    output_dir: ${oc.env:PRIME_RL_OUTPUT_ROOT,outputs/prime_rl}/paper_prime_rl
+    dump_subconfigs_only: false
+    clean: false
+    inference_gpu_ids: [0, 1]
+    trainer_gpu_ids: [2, 3]
+    batch_size: 80
+    rollouts_per_example: 8
+    learning_rate: 1.5e-5
+    use_lora: true
+    max_turns: 20
+    max_tokens: 2048
+    max_async_level: 1
+    max_off_policy_steps: 8
+    env_sampling_strategy: round_robin
+    trainer_loss:
+      kl_tau: 0.0
+    trainer_attn: flash_attention_2
+    seq_len: 32768
+    inference_max_model_len: 32768
+    max_steps: 1000
+    source:
+      generators:
+        - capabilities_gtfobins
+        - suid_gtfobins
+        - sudo_gtfobins
+        - cron_wildcard
+        - cron_writable_script
+        - password_file
+        - password_history
+        - password_reuse
+        - ssh_key_reuse
+        - weak_password
+    ckpt_interval: 100
+    ckpt_keep_last: 5
+    ckpt_keep_interval: 500
+    inference_gpu_memory_utilization: 0.75
+    inference_tool_call_parser: null
+    inference_enable_auto_tool_choice: false
+    eval_on_benchmark: false
+    fused_lm_head_chunk_size: disabled
+
+hydra:
+  run:
+    dir: ${rl.prime_rl.output_dir}/${now:%Y-%m-%d_%H-%M-%S}
+
+scenario:
+  base_command_timeout: 5
+  slow_command_timeout: 20
+
+reward:
+  mode: outcome_round_cost

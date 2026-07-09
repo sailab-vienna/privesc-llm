@@ -1,0 +1,74 @@
+# @package rl.prime_rl
+
+base_model: Qwen/Qwen3-4B-Instruct-2507
+init_adapter_path: ""
+
+output_dir: outputs/prime_rl/${now:%Y-%m-%d_%H-%M-%S}
+clean: false
+dump_subconfigs_only: false
+
+ckpt_interval: null
+ckpt_resume_step: null
+ckpt_keep_last: null
+ckpt_keep_interval: null
+ckpt_save_adapter_separately: true
+
+source:
+  type: procedural
+  generators:
+    - capabilities_gtfobins
+    - suid_gtfobins
+    - sudo_gtfobins
+    - cron_wildcard
+    - cron_writable_script
+    - password_file
+    - password_history
+    - password_reuse
+    - ssh_key_reuse
+    - weak_password
+  seed: 42
+  random_seed: false
+
+scenario_backend: remote_ssh
+
+max_turns: 20
+
+batch_size: 32
+rollouts_per_example: 4
+learning_rate: 4.0e-5
+max_tokens: 2048
+seq_len: 4096
+use_lora: true
+fused_lm_head_chunk_size: disabled
+trainer_impl: auto
+trainer_attn: sdpa
+activation_checkpoint_freq: 1
+inference_enable_auto_tool_choice: false
+inference_tool_call_parser: null
+inference_reasoning_parser: null
+inference_gpu_memory_utilization: 0.3
+inference_enforce_eager: false
+inference_max_model_len: null
+inference_gpu_ids: [0]
+trainer_gpu_ids: [0]
+max_steps: null
+max_async_level: 1
+max_off_policy_steps: 8
+env_sampling_strategy: round_robin
+zero_advantage_filter_enforce: false
+trainer_loss:
+  type: default
+  dppo_mask_low: 0.2
+  dppo_mask_high: 0.2
+  adv_tau: 1.0
+  teacher_tau: 0.0
+  kl_tau: 1e-3
+
+eval_on_benchmark: false
+eval_every: 0
+eval_num_examples: -1
+eval_rollouts_per_example: 1
+eval_max_tokens: null
+
+wandb_project: privesc-llm-prime-rl
+wandb_run_name: null

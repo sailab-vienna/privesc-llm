@@ -1,0 +1,12 @@
+defaults:
+  - base
+  - _self_
+
+mode: evaluation
+
+# Paper evaluation protocol
+runs_per_item: 10
+workers: ${oc.env:EVAL_WORKERS,12}
+
+# Retries are for transient infrastructure/API errors.
+max_retries_per_run: 5

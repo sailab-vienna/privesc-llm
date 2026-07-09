@@ -1,0 +1,9 @@
+api_base: ${oc.env:OPENAI_API_BASE,https://api.openai.com/v1}
+api_key: ${oc.env:OPENAI_API_KEY,default}
+model: gpt-5
+max_turns: 60
+
+context_management:
+  enabled: true
+  max_len: 32768
+  reserve_ratio: 0.10

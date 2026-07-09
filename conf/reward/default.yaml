@@ -1,0 +1,9 @@
+# @package reward
+
+mode: outcome_round_cost
+h_max: ${rl.prime_rl.max_turns}
+lambda_cost: 0.1
+c_ref_ms: 540000
+llm_ms_clip_ms: 20000
+tool_ms_clip_ms: 65000
+iface_penalty: 0.05

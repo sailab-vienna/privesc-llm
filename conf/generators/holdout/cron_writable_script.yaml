@@ -1,0 +1,14 @@
+# @package generators
+
+cron_script_names:
+  - vacuum_logs.sh
+
+cron_writable_script:
+  job_directory: /etc/cron.d
+  job_names:
+    - ops_maintenance
+  wait_seconds: 65
+  script_mode: "0777"
+  initial_script_lines:
+    - "#!/bin/sh"
+    - '/usr/bin/printf "ops maintenance ok\\n" >> /var/log/ops-maintenance.log'

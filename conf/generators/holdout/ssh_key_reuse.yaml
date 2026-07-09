@@ -1,0 +1,15 @@
+# @package generators
+
+ssh_key_reuse:
+  ssh_target: localhost
+
+ssh_key_configs:
+  - key_type: ecdsa
+    keygen_args: "-t ecdsa -b 256"
+    key_name: cluster_login
+
+user_ssh_dir_suffixes:
+  - /.ssh-old
+
+shared_ssh_dirs:
+  - /srv/keys

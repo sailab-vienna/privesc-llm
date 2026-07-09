@@ -1,0 +1,60 @@
+diff --git a/src/prime_rl/entrypoints/rl.py b/src/prime_rl/entrypoints/rl.py
+index b740f58ba..dc92e16e9 100644
+--- a/src/prime_rl/entrypoints/rl.py
++++ b/src/prime_rl/entrypoints/rl.py
+@@ -8,6 +8,8 @@ import uuid
+ from pathlib import Path
+ from subprocess import Popen
+ from threading import Event, Thread
++from urllib.error import HTTPError, URLError
++from urllib.request import urlopen
+ 
+ import pynvml
+ import tomli_w
+@@ -98,6 +100,30 @@ def check_gpus_available(gpu_ids: list[int]) -> None:
+         raise RuntimeError(msg)
+ 
+ 
++def wait_for_local_inference_ready(
++    process: Popen, port: int, host: str | None, timeout_s: int = 300
++) -> None:
++    probe_host = host or "127.0.0.1"
++    if probe_host == "0.0.0.0":
++        probe_host = "127.0.0.1"
++    url = f"http://{probe_host}:{port}/v1/models"
++    deadline = time.time() + timeout_s
++    while time.time() < deadline:
++        if process.poll() is not None:
++            raise RuntimeError(
++                "Inference exited before becoming ready with exit code "
++                f"{process.returncode}"
++            )
++        try:
++            with urlopen(url, timeout=2) as response:
++                if 200 <= response.status < 300:
++                    return
++        except (HTTPError, TimeoutError, URLError):
++            pass
++        time.sleep(2)
++    raise TimeoutError(f"Inference did not become ready within {timeout_s}s: {url}")
++
++
+ def rl_local(config: RLConfig):
+     assert config.deployment.type == "single_node"
+ 
+@@ -204,6 +225,15 @@ def rl_local(config: RLConfig):
+                 )
+             processes.append(inference_process)
+ 
++            logger.info("Waiting for inference server readiness")
++            wait_for_local_inference_ready(
++                inference_process,
++                port=config.inference.server.port,
++                host=config.inference.server.host,
++                timeout_s=config.orchestrator.client.wait_for_ready_timeout,
++            )
++            logger.info("Inference server is ready")
++
+             # Start monitoring thread
+             stop_event = Event()
+             stop_events["inference"] = stop_event

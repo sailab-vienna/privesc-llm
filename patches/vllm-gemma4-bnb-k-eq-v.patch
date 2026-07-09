@@ -1,0 +1,108 @@
+diff --git a/model_executor/model_loader/bitsandbytes_loader.py b/model_executor/model_loader/bitsandbytes_loader.py
+--- a/model_executor/model_loader/bitsandbytes_loader.py
++++ b/model_executor/model_loader/bitsandbytes_loader.py
+@@ -806,6 +806,13 @@
+             **expert_quant_state_dict,
+             **stacked_quant_state_dict,
+         }
++        postprocess_quant_states = getattr(
++            model, "maybe_postprocess_bitsandbytes_quant_state_dict", None
++        )
++        if callable(postprocess_quant_states):
++            stacked_quant_state_dict = postprocess_quant_states(
++                stacked_quant_state_dict
++            )
+         self._bind_quant_states_to_params(model, stacked_quant_state_dict)
+         torch.accelerator.empty_cache()
+ 
+diff --git a/model_executor/models/gemma4.py b/model_executor/models/gemma4.py
+--- a/model_executor/models/gemma4.py
++++ b/model_executor/models/gemma4.py
+@@ -18,5 +18,6 @@
+ """Gemma 4 model implementation for vLLM."""
+ 
++import copy
+ from collections.abc import Iterable
+ from dataclasses import replace
+ from itertools import islice
+@@ -78,5 +79,32 @@
+ logger = init_logger(__name__)
+ 
+ 
++def _duplicate_k_eq_v_bnb_quant_states(
++    config,
++    stacked_quant_state_dict: dict[str, dict[int, object]],
++    *,
++    prefix: str = "",
++) -> dict[str, dict[int, object]]:
++    """Mirror K quantization states onto V for Gemma4 k_eq_v layers."""
++    if not getattr(config, "attention_k_eq_v", False):
++        return stacked_quant_state_dict
++
++    updated = dict(stacked_quant_state_dict)
++    for layer_idx, layer_type in enumerate(config.layer_types):
++        if layer_type != "full_attention":
++            continue
++
++        qkv_param_name = f"{prefix}model.layers.{layer_idx}.self_attn.qkv_proj.weight"
++        quant_states = updated.get(qkv_param_name)
++        if quant_states is None or 1 not in quant_states or 2 in quant_states:
++            continue
++
++        duplicated_quant_states = dict(quant_states)
++        duplicated_quant_states[2] = copy.deepcopy(quant_states[1])
++        updated[qkv_param_name] = duplicated_quant_states
++
++    return updated
++
++
+ def _get_text_config(config):
+     """Dereference text_config if config is a nested Gemma4Config.
+@@ -1277,6 +1304,15 @@
+             return hidden_states, aux_hidden_states
+         return hidden_states
+ 
++    def maybe_postprocess_bitsandbytes_quant_state_dict(
++        self,
++        stacked_quant_state_dict: dict[str, dict[int, object]],
++    ) -> dict[str, dict[int, object]]:
++        return _duplicate_k_eq_v_bnb_quant_states(
++            self.config,
++            stacked_quant_state_dict,
++        )
++
+     def load_weights(self, weights: Iterable[tuple[str, torch.Tensor]]) -> set[str]:
+         stacked_params_mapping = [
+             # (param_name, shard_name, shard_id)
+diff --git a/model_executor/models/gemma4_mm.py b/model_executor/models/gemma4_mm.py
+--- a/model_executor/models/gemma4_mm.py
++++ b/model_executor/models/gemma4_mm.py
+@@ -40,7 +40,10 @@
+ from vllm.logger import init_logger
+ from vllm.model_executor.layers.layernorm import RMSNorm
+ from vllm.model_executor.layers.linear import ReplicatedLinear
+-from vllm.model_executor.models.gemma4 import Gemma4ForCausalLM
++from vllm.model_executor.models.gemma4 import (
++    Gemma4ForCausalLM,
++    _duplicate_k_eq_v_bnb_quant_states,
++)
+ from vllm.model_executor.models.module_mapping import MultiModelKeys
+ from vllm.multimodal import MULTIMODAL_REGISTRY
+ from vllm.multimodal.inputs import (
+@@ -1327,6 +1330,16 @@
+     ) -> torch.Tensor | None:
+         return self.language_model.compute_logits(hidden_states)
+ 
++    def maybe_postprocess_bitsandbytes_quant_state_dict(
++        self,
++        stacked_quant_state_dict: dict[str, dict[int, object]],
++    ) -> dict[str, dict[int, object]]:
++        return _duplicate_k_eq_v_bnb_quant_states(
++            self.config.text_config,
++            stacked_quant_state_dict,
++            prefix="language_model.",
++        )
++
+     # ------------------------------------------------------------------ #
+     # Weight loading
+     # ------------------------------------------------------------------ #

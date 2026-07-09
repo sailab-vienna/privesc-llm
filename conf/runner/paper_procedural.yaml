@@ -1,0 +1,21 @@
+defaults:
+  - paper_protocol
+  - _self_
+
+output_dir: outputs/evals/paper_baselines/procedural
+
+source:
+  type: procedural
+  seed: 42
+  random_seed: false
+  generators:
+    - capabilities_gtfobins
+    - suid_gtfobins
+    - sudo_gtfobins
+    - cron_wildcard
+    - cron_writable_script
+    - password_file
+    - password_history
+    - password_reuse
+    - ssh_key_reuse
+    - weak_password

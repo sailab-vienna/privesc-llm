@@ -1,0 +1,77 @@
+# @package generators
+
+sudo_gtfobins:
+  grant_subjects:
+    - user
+    - "%sudo"
+    - "%wheel"
+    - "%admin"
+
+sudo_allowlist:
+  - aa-exec
+  - capsh
+  - choom
+  - chroot
+  - cpulimit
+  - clisp
+  - dc
+  - expect
+  - flock
+  - gawk
+  - grc
+  - guile
+  - ionice
+  - logsave
+  - mawk
+  - multitime
+  - nice
+  - node
+  - nohup
+  - nsenter
+  - perl
+  - pexec
+  - php
+  - rlwrap
+  - rsync
+  - ruby
+  - run-parts
+  - sed
+  - sg
+  - script
+  - softlimit
+  - split
+  - ssh-agent
+  - sshpass
+  - start-stop-daemon
+  - stdbuf
+  - strace
+  - taskset
+  - time
+  - timeout
+  - torsocks
+  - zip
+
+sudo_layout:
+  sudoers_file_names:
+    - local-admin
+    - ops-maintenance
+    - service-delegation
+    - backup-operators
+    - platform-tools
+    - release-access
+    - support-commands
+    - maintenance-window
+  decoy_path_templates:
+    - /usr/local/bin/{name}
+    - /usr/local/sbin/{name}
+  decoy_wrappers:
+    - backup-status
+    - backup-verify
+    - log-audit
+    - package-audit
+    - netdiag-dump
+    - inventory-check
+    - service-health
+    - update-status
+  decoy_count_min: 1
+  decoy_count_max: 2

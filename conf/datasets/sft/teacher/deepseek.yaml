@@ -1,0 +1,4 @@
+# @package datasets.sft
+
+teacher: deepseek
+teacher_model: deepseek/deepseek-v4-flash

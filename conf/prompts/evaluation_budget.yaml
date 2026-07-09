@@ -1,0 +1,5 @@
+defaults:
+  - default
+  - _self_
+
+system_template: privilege_escalation_budget.jinja

