@@ -58,8 +58,7 @@ class TraceLeakageBucket:
         self.rows_with_hard_rejection += int(bool(hard_rejections))
         self.hard_rejection_class_counts.update(hard_rejections)
         self.sft_rejection_reason_counts.update(
-            _reason_class(reason)
-            for reason in _strings(row, "sft_rejection_reasons")
+            _reason_class(reason) for reason in _strings(row, "sft_rejection_reasons")
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -215,7 +214,6 @@ def run_manifest(
                 _source_path(audit_cfg["paper_runs_root"], outputs_root), outputs_root
             ),
         },
-        "lineage": {"checkpoint_path_from_outputs": None},
     }
 
 
@@ -233,9 +231,7 @@ def reviewer_summary(
     benchmark_rows: list[dict[str, Any]],
     model_visible_keywords: list[str],
 ) -> dict[str, Any]:
-    profile_overlaps = [
-        row for row in profile_rows if int(row["overlap_count"]) > 0
-    ]
+    profile_overlaps = [row for row in profile_rows if int(row["overlap_count"]) > 0]
     trace_totals = trace_summary["totals"]
     dataset_totals = dataset_scan["totals"]
     benchmark_categories = sorted({row["category"] for row in benchmark_rows})
@@ -247,14 +243,12 @@ def reviewer_summary(
         "hydra_experiment": "audit/split_leakage",
         "output_dir": _project_relative(output_dir, project_dir),
         "reviewer_questions_answered": {
-            "train_validation_static_split": True,
             "procedural_holdout_values_disjoint": len(profile_overlaps) == 0,
-            "static_benchmark_excluded_from_tuning": True,
-            "model_visible_hidden_solution_scan": dataset_totals[
+            "model_visible_solution_marker_hits_absent": dataset_totals[
                 "message_hit_examples"
             ]
             == 0,
-            "metadata_solution_strings_not_model_visible": dataset_totals[
+            "metadata_solution_marker_hits_present": dataset_totals[
                 "metadata_hit_examples"
             ]
             > 0,
@@ -272,12 +266,8 @@ def reviewer_summary(
             "trace_benchmark_holdout_rejected": trace_totals[
                 "benchmark_holdout_rejected"
             ],
-            "trace_hard_rejection_classes": trace_totals[
-                "hard_rejection_class_counts"
-            ],
-            "trace_sft_rejection_reasons": trace_totals[
-                "sft_rejection_reason_counts"
-            ],
+            "trace_hard_rejection_classes": trace_totals["hard_rejection_class_counts"],
+            "trace_sft_rejection_reasons": trace_totals["sft_rejection_reason_counts"],
             "dataset_examples_scanned": dataset_totals["examples"],
             "dataset_message_solution_hits": dataset_totals["message_hit_examples"],
             "dataset_metadata_solution_hits": dataset_totals["metadata_hit_examples"],
@@ -311,11 +301,8 @@ def reviewer_summary(
             },
         },
         "leakage_policy": {
-            "model_visible_secret_keyword_count": len(model_visible_keywords),
-            "metadata_note": (
-                "Metadata-only solution strings are present in provenance fields but "
-                "are not in model-visible messages."
-            ),
+            "solution_marker_phrase_count": len(model_visible_keywords),
+            "metadata_note": "Solution-marker hits occur only in metadata fields.",
         },
         "benchmark_holdout_policy": {
             "rule_table": "benchmark_holdouts.tsv",
@@ -365,6 +352,8 @@ def trace_leakage_summary(
     for path in paths:
         for row in _iter_jsonl(path):
             total.update(row)
+    if total.rows == 0:
+        raise ValueError(f"No trace leakage rows found in {root} matching {pattern}")
     return {
         "schema_version": 1,
         "root": _project_relative(root, project_dir),
@@ -384,6 +373,8 @@ def dataset_visibility_scan(
             message_hits = matched_keywords(_message_text(example), keywords)
             metadata_hits = matched_keywords(_metadata_text(example), keywords)
             total.update(message_hits, metadata_hits)
+    if total.examples == 0:
+        raise ValueError(f"No dataset examples found in {root} matching {pattern}")
     return {
         "schema_version": 1,
         "root": _project_relative(root, project_dir),
@@ -403,6 +394,8 @@ def selection_ledger(
     static_prefix: str,
     project_dir: Path,
 ) -> dict[str, Any]:
+    if not paths:
+        raise ValueError(f"No evaluation provenance files found in {root}")
     scope_counts: Counter[str] = Counter()
     for path in paths:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -427,7 +420,9 @@ def eval_scope(
 ) -> str:
     if eval_experiment == procedural_experiment:
         return "procedural_validation"
-    if eval_experiment == static_experiment or eval_experiment.startswith(static_prefix):
+    if eval_experiment == static_experiment or eval_experiment.startswith(
+        static_prefix
+    ):
         return "static_benchmark"
     if "procedural" in eval_experiment:
         return "procedural_other"
@@ -440,35 +435,33 @@ def readme_text(manifest: dict[str, Any], summary: dict[str, Any]) -> str:
     counts = summary["headline_counts"]
     split = summary["split_policy"]
     benchmark = summary["benchmark_holdout_policy"]
+    benchmark_rows = benchmark_holdout_table_rows()
+    enforced_rules = sum(bool(row["hard_rejection_class"]) for row in benchmark_rows)
+    monitored_rules = len(benchmark_rows) - enforced_rules
     return "\n".join(
         [
             "# E0 Split and Leakage Audit",
             "",
-            "This artifact answers the reviewer-facing split and leakage questions.",
+            "This artifact reports split configuration and leakage scan results.",
             "",
-            "## How To Reproduce",
-            "",
-            "```bash",
-            "uv run python -m src.dataset.privesc.audit +experiment=audit/split_leakage",
-            "```",
-            "",
-            "## Direct Answers",
+            "## Verified Results",
             "",
             f"- Training uses procedural generators with profile `{split['training']['generator_profile']}` and seed `{split['training']['seed']}`.",
             f"- Procedural validation uses profile `{split['procedural_validation']['generator_profile']}`, deterministic seeds, and `{split['procedural_validation']['config']}`.",
-            "- Static benchmark is final external evaluation only; it is not used for prompt tuning, checkpoint selection, reward selection, decoy-setting selection, or model selection.",
-            f"- Training/validation profile overlap categories: `{counts['generator_profile_overlap_categories']}`.",
-            f"- Assembled dataset examples scanned: `{counts['dataset_examples_scanned']}`.",
-            f"- Model-visible hidden-solution hits: `{counts['dataset_message_solution_hits']}`.",
-            f"- Metadata-only solution/provenance hits: `{counts['dataset_metadata_solution_hits']}`.",
+            "- The static benchmark is the final external evaluation.",
+            f"- Training and procedural validation have `{len(counts['generator_profile_overlap_categories'])}` overlapping holdout categories.",
+            f"- The `{summary['leakage_policy']['solution_marker_phrase_count']}`-phrase solution-marker scan found "
+            f"`{counts['dataset_message_solution_hits']}` model-visible hits across `{counts['dataset_examples_scanned']}` examples; "
+            f"`{counts['dataset_metadata_solution_hits']}` examples contain marker hits only in metadata.",
             f"- Raw trace leakage summaries scanned: `{counts['trace_leakage_files_scanned']}` files / `{counts['raw_trace_rows_scanned']}` rows.",
             f"- Benchmark-holdout filter rejections in scanned raw traces: `{counts['trace_benchmark_holdout_rejected']}`.",
             f"- SFT-usable rows after quality filters: `{counts['trace_sft_usable']}` / `{counts['raw_trace_rows_scanned']}`.",
             "",
             "## Benchmark Holdout Rules",
             "",
-            f"`benchmark_holdouts.tsv` has `{counts['benchmark_holdout_rules']}` generator-specific rules, one row per exact exclusion rule.",
-            "Each row states the procedural generator, the static benchmark case(s) that motivated the exclusion, the held-out surface category, the match mode, the concrete substring or regex pattern, and the hard rejection class used when the match makes a trace ineligible. A blank hard rejection class means the rule is tracked as leakage evidence but is not by itself a hard exclusion.",
+            f"`benchmark_holdouts.tsv` records `{counts['benchmark_holdout_rules']}` generator-specific checks: "
+            f"`{enforced_rules}` enforced exclusions and `{monitored_rules}` monitored checks.",
+            "Each row records the procedural generator, motivating static case, held-out surface, match mode, pattern, and hard-rejection class.",
             f"Covered categories: `{benchmark['categories']}`.",
             "",
             "## Filter Results",

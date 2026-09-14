@@ -8,6 +8,10 @@ agent:
     temperature: 0.7
     top_p: 0.8
     top_k: 20
+    extra_body:
+      min_p: 0.0
+      chat_template_kwargs:
+        enable_thinking: false
 
 runner:
-  output_dir: outputs/evals/paper_static_qwen3_4b_base
+  output_dir: outputs/evals/paper_static_qwen3_8b_nonthinking

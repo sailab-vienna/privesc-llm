@@ -295,6 +295,7 @@ class LocalDockerBackend:
             password=self._scen_cfg.container_password,
             known_hosts=None,
             config=None,
+            agent_path=None,
             connect_timeout=self._auth_connect_timeout(),
             keepalive_interval=KEEPALIVE_INTERVAL,
             keepalive_count_max=KEEPALIVE_COUNT_MAX,

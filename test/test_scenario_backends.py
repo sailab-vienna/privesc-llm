@@ -923,6 +923,7 @@ async def test_local_backend_connect_to_container_disables_ssh_config_loading(
     await backend._connect_to_container()
 
     assert captured["config"] is None
+    assert captured["agent_path"] is None
     assert captured["port"] == 2222
     assert captured["username"] == backend._scen_cfg.container_user
 

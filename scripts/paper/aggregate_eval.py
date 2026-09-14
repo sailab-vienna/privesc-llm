@@ -177,14 +177,19 @@ def link_protocol_trace_view(
 def parse_eval_root(raw: str) -> tuple[str, Path, Path]:
     eval_root = Path(raw).expanduser().resolve(strict=True)
     traces_root = eval_root / "traces"
-    if not traces_root.is_dir():
-        raise ValueError(f"eval root missing traces directory: {traces_root}")
-    trace_dirs = [path for path in traces_root.iterdir() if path.is_dir()]
-    if len(trace_dirs) != 1:
-        raise ValueError(
-            f"eval root must contain exactly one traces/<model> directory: {eval_root}"
-        )
-    return trace_dirs[0].name, trace_dirs[0], eval_root
+    if traces_root.is_dir():
+        trace_dirs = [path for path in traces_root.iterdir() if path.is_dir()]
+        if len(trace_dirs) != 1:
+            raise ValueError(
+                "eval root must contain exactly one traces/<model> directory: "
+                f"{eval_root}"
+            )
+        return trace_dirs[0].name, trace_dirs[0], eval_root
+    if any(eval_root.glob("*.json")):
+        return eval_root.name, eval_root, eval_root
+    raise ValueError(
+        f"eval root contains neither traces/<model> nor trace JSON files: {eval_root}"
+    )
 
 
 def infer_common_value(name: str, values: list[str | None], default: str) -> str:
@@ -267,7 +272,11 @@ def validate_canonical_aggregate_output(manifest_root: Path, output_dir: Path) -
             "--output-dir must be under --manifest-root when --manifest-root is set"
         ) from exc
 
-    if len(relative.parts) < 4 or relative.parts[0] != "eval" or relative.parts[2] != "aggregate":
+    if (
+        len(relative.parts) < 4
+        or relative.parts[0] != "eval"
+        or relative.parts[2] != "aggregate"
+    ):
         raise ValueError(
             "--output-dir must be under --manifest-root/eval/<split>/aggregate/<name> "
             "when --manifest-root is set"
@@ -381,8 +390,8 @@ def main() -> None:
         help=(
             "Optional canonical paper run root for run_manifest.json and "
             "source_manifest.json. When set, --output-dir must be under "
-            "<manifest-root>/eval/<split>/aggregate/<name>. Defaults to "
-            "--output-dir for legacy callers."
+            "<manifest-root>/eval/<split>/aggregate/<name>. Manifests are not "
+            "written when omitted."
         ),
     )
     parser.add_argument(
@@ -413,7 +422,10 @@ def main() -> None:
         "--eval-root",
         action="append",
         required=True,
-        help="Eval root containing exactly one traces/<model> directory.",
+        help=(
+            "Eval root containing exactly one traces/<model> directory, or a "
+            "directory containing trace JSON files directly."
+        ),
     )
     downsample_group = parser.add_mutually_exclusive_group()
     downsample_group.add_argument(
@@ -467,16 +479,17 @@ def main() -> None:
     manifest_root = (
         args.manifest_root.expanduser().resolve(strict=False)
         if args.manifest_root is not None
-        else output_dir
+        else None
     )
-    if args.manifest_root is not None:
+    if manifest_root is not None:
         validate_canonical_aggregate_output(manifest_root, output_dir)
     eval_sources = [parse_eval_root(raw) for raw in args.eval_root]
     eval_roots = [eval_root for _model_tag, _trace_dir, eval_root in eval_sources]
-    sources = [(model_tag, trace_dir) for model_tag, trace_dir, _eval_root in eval_sources]
-    condition = (
-        args.condition
-        or (manifest_root.parent.name if args.manifest_root is not None else output_dir.name)
+    sources = [
+        (model_tag, trace_dir) for model_tag, trace_dir, _eval_root in eval_sources
+    ]
+    condition = args.condition or (
+        manifest_root.parent.name if manifest_root is not None else output_dir.name
     )
     if args.experiment and args.experiment_id and args.base_model:
         experiment = str(args.experiment)
@@ -556,18 +569,19 @@ def main() -> None:
         copy_output_dir(tmp_dir / "stats", output_dir / "stats")
         copy_output_dir(tmp_dir / "plots", output_dir / "plots")
 
-    write_manifests(
-        manifest_root=manifest_root,
-        output_dir=output_dir,
-        project_dir=project_dir,
-        experiment_id=experiment_id,
-        experiment=experiment,
-        base_model=base_model,
-        condition=condition,
-        sources=sources,
-        command=[sys.executable, *sys.argv],
-        downsample_summaries=downsample_summaries,
-    )
+    if manifest_root is not None:
+        write_manifests(
+            manifest_root=manifest_root,
+            output_dir=output_dir,
+            project_dir=project_dir,
+            experiment_id=experiment_id,
+            experiment=experiment,
+            base_model=base_model,
+            condition=condition,
+            sources=sources,
+            command=[sys.executable, *sys.argv],
+            downsample_summaries=downsample_summaries,
+        )
     print(f"[INFO] Aggregate analysis written to {output_dir}")
 
 

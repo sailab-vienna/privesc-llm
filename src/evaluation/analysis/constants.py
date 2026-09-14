@@ -5,7 +5,7 @@ ROUND_BUDGETS = list(range(5, 65, 5))
 MAX_ROUNDS = 60
 PRIMARY_ROUND_BUDGET = 20
 PARETO_ROUND_BUDGET = PRIMARY_ROUND_BUDGET
-RUNS_PER_SCENARIO = 20
+RUNS_PER_SCENARIO = 10
 SCENARIOS_PER_MODEL = 12
 RUNS_PER_MODEL = RUNS_PER_SCENARIO * SCENARIOS_PER_MODEL
 PRIVESC_LLM_NAME = "PrivEsc-LLM 4B"
@@ -76,6 +76,11 @@ PRETTY_MODEL_NAMES = {
     DEEPSEEK_V32_MODEL: "DeepSeek V3.2",
     "deepseek/deepseek-v4-flash": "DeepSeek V4 Flash",
     "deepseek/deepseek-v4-pro": "DeepSeek V4 Pro",
+    "llama3_2_3b_instruct": "Llama 3.2 3B Instruct",
+    "qwen3_14b_fp8_nonthinking": "Qwen3 14B (thinking off)",
+    "qwen3_14b_fp8_thinking": "Qwen3 14B (thinking on)",
+    "qwen3_8b_nonthinking": "Qwen3 8B (thinking off)",
+    "qwen3_8b_thinking": "Qwen3 8B (thinking on)",
     "e4_outcome_step_200": "Outcome",
     "e4_outcome_round_step_400": "+ Round",
     "e4_outcome_round_cost_step_200": "+ Round+Cost",

@@ -1,0 +1,17 @@
+# @package _global_
+
+defaults:
+  - /experiment/eval/paper_static_local_vllm_base
+
+agent:
+  params:
+    temperature: 0.6
+    top_p: 0.95
+    top_k: 20
+    extra_body:
+      min_p: 0.0
+      chat_template_kwargs:
+        enable_thinking: true
+
+runner:
+  output_dir: outputs/evals/paper_static_qwen3_8b_thinking

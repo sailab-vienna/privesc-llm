@@ -213,6 +213,7 @@ VLLM_HEALTH_CHECK_INTERVAL_SECONDS="${PAPER_EVAL_VLLM_HEALTH_CHECK_INTERVAL_SECO
 VLLM_EXTRA_JSON="$(jq -cn \
   --arg max_num_seqs "$VLLM_MAX_NUM_SEQS" \
   --arg max_num_batched_tokens "$VLLM_MAX_NUM_BATCHED_TOKENS" \
+  --arg model_revision "$VLLM_MODEL_REVISION" \
   --arg eval_model_id "$EVAL_MODEL_ID" \
   --arg default_chat_template_kwargs "$VLLM_DEFAULT_CHAT_TEMPLATE_KWARGS" \
   --arg enable_lora "$ENABLE_LORA" '
@@ -221,6 +222,7 @@ VLLM_EXTRA_JSON="$(jq -cn \
       max_num_batched_tokens: (
         if $max_num_batched_tokens != "" then ($max_num_batched_tokens | tonumber) else null end
       ),
+      revision: (if $model_revision != "" then $model_revision else null end),
       served_model_name: (
         if $enable_lora != "1" and $eval_model_id != "" then [$eval_model_id] else null end
       ),
@@ -251,9 +253,6 @@ if [ "$VLLM_ENFORCE_EAGER" = "1" ]; then
 fi
 if [ -n "$VLLM_REASONING_PARSER" ]; then
   VLLM_CMD+=(--model.reasoning-parser "$VLLM_REASONING_PARSER")
-fi
-if [ -n "$VLLM_MODEL_REVISION" ]; then
-  VLLM_CMD+=(--revision "$VLLM_MODEL_REVISION")
 fi
 if [ -n "$VLLM_TP" ]; then
   VLLM_CMD+=(--parallel.tp "$VLLM_TP")

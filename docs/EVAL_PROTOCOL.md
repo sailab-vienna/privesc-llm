@@ -1,7 +1,7 @@
 # Evaluation Protocol (Paper)
 
-This document records the preprint evaluation protocol and points to the
-configs that implement it.
+This document records the paper evaluation protocol and its implementing
+configs.
 
 ## Static Benchmark
 
@@ -10,11 +10,10 @@ configs that implement it.
 - Runs: 10 valid runs per scenario, 120 runs per model.
 - Horizon: 60 rounds.
 - Primary endpoint: success within 20 rounds, `P(H_root <= 20)`.
-- Secondary endpoints: success within smaller/larger round budgets, especially
-  `1, 3, 5, 10, 20, 50, 60`.
+- Secondary endpoints: success within round budgets `5, 10, ..., 60`.
 - Containers: fresh container per run.
-- Selection rule: no static benchmark result is used to select trace design,
-  prompt, SFT hyperparameters, reward variant, or RL checkpoint.
+- Selection rule: trace design, prompt, SFT hyperparameters, reward variant, and
+  RL checkpoint are selected exclusively on procedural holdout.
 
 For exact paper-sized reruns, pass `runner.runs_per_item=10` to `src.runner`
 or set `EVAL_RUNNER_RUNS_PER_ITEM=10` for `scripts/run_model_eval_vllm.sh`.
@@ -46,12 +45,11 @@ Paper-facing systems:
 - Claude Opus 4.7 API baseline
 - ChainReactor plan-finding baseline
 
-Traditional-tool and human rows are cited from prior work unless a separate
-output artifact records fresh runs.
+Traditional-tool and human results are cited from prior work.
 
 ## Reporting
 
-Report success as per-run probability under a fixed round budget, not best-of-k
-retry success. Static-benchmark tables and figures use Wilson 95% confidence
-intervals where intervals are shown. Cost comparisons use expected cost per
+The reported metric is per-run success probability under a fixed round budget.
+Static-benchmark tables and figures use Wilson 95% confidence intervals where
+intervals are shown. Cost comparisons use expected cost per
 successful root at `r <= 20`.

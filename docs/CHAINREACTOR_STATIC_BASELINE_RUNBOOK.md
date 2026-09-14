@@ -7,8 +7,7 @@ Eval protocol (sample size, splits, CI reporting) follows `EVAL_PROTOCOL.md`. Ch
 - benchmark split: the 12 static scenarios from `load_benchmark_scenarios()`
 - backend: `local_docker`
 - planner: locally built PowerLifted
-- primary metric: `plan_found`
-- plan execution back into the benchmark is not implemented yet, so `executed_success` stays unset
+- measured outcome: `plan_found` across the 12 static scenarios; execution success is not measured
 
 ## Reproducible inputs
 
@@ -116,33 +115,6 @@ The CSV and JSON include:
 - `planner_total_time_sec`
 - `planner_time_limit_sec`
 - `planner_timed_out`
-
-## Summarize the run
-
-The snippet below summarizes a single output root.
-
-```bash
-uv run python - <<'PY'
-import csv
-import sys
-from pathlib import Path
-
-path = Path(sys.argv[1])
-rows = list(csv.DictReader(path.open()))
-plans = sum(row["plan_found"] == "1" for row in rows)
-print(f"scenarios={len(rows)}")
-print(f"plans={plans}")
-print(f"success_rate={plans / len(rows):.4f}")
-for row in rows:
-    print(
-        row["scenario"],
-        row["status"],
-        row["goal_found_time_sec"] or "-",
-        row["planner_total_time_sec"] or "-",
-        row["planner_timed_out"] or "-",
-    )
-PY "$OUTPUT_ROOT/runs.csv"
-```
 
 ## Static Scenario Set
 

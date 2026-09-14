@@ -790,7 +790,7 @@ def test_parse_validate_run_counts_raises_on_unexpected_scenario(tmp_path) -> No
 def test_expected_scenarios_from_static_experiment_uses_runner_config() -> None:
     assert analyze._expected_protocol_from_experiment(
         "eval/paper_static_qwen3_4b_base"
-    ) == (load_benchmark_scenarios(), 20)
+    ) == (load_benchmark_scenarios(), 10)
 
 
 def test_expected_scenarios_from_procedural_experiment_uses_generators() -> None:
