@@ -6,22 +6,23 @@
 
 ## Public Release
 
-This repository contains the public source code for PrivEsc-LLM and tracks the artifacts for the current preprint, [arXiv:2603.17673](https://arxiv.org/abs/2603.17673).
-Runtime outputs are released separately as organized HuggingFace artifacts:
+This repository contains the public source code and artifacts for the [PrivEsc-LLM paper](https://arxiv.org/abs/2603.17673), accepted at ACSAC 2026.
+Datasets, models, and evaluation results are available on Hugging Face:
 
 - [`sailab-vienna/privesc-llm-data`](https://huggingface.co/datasets/sailab-vienna/privesc-llm-data): paper SFT dataset, leakage audit, and examples
 - [`sailab-vienna/privesc-llm-4b`](https://huggingface.co/sailab-vienna/privesc-llm-4b): paper SFT and final RL LoRA adapters
-- [`sailab-vienna/privesc-llm-evals`](https://huggingface.co/datasets/sailab-vienna/privesc-llm-evals): compact paper evaluation summaries, manifests, and complete headline static benchmark traces
+- [`sailab-vienna/privesc-llm-evals`](https://huggingface.co/datasets/sailab-vienna/privesc-llm-evals): paper summaries, compact numeric evidence, and complete headline and rebuttal static benchmark traces
 
-Start with `docs/PAPER_REPRODUCTION_RUNBOOK.md` for the experiment workflow.
+Start with [ARTIFACT.md](ARTIFACT.md) for the scripted artifact-evaluation
+workflow. The [paper reproduction runbook](docs/PAPER_REPRODUCTION_RUNBOOK.md)
+documents the full experiment pipeline.
+
+Trace examples, including the two referenced in the paper, are in
+[examples/](examples/).
 
 ## Motivation
 
 Vulnerability assessments involve highly sensitive data: system configurations, credentials, internal network details. Organizations often cannot send this data to external cloud APIs. This repository studies post-training compact local models for verifiable Linux privilege-escalation tasks while keeping deployment-time inference local.
-
-## Paper Pipeline
-
-The paper-facing pipeline trains only on procedural scenarios, reserves the static benchmark for final evaluation, and compares a Qwen3-4B local model ladder against reported API, larger-local, and security-specific baselines under a fixed budgeted protocol. Reproduction details live in `docs/PAPER_REPRODUCTION_RUNBOOK.md`.
 
 ## Overview
 
@@ -47,6 +48,7 @@ conf/
 └── runner/        # Runner configurations
 
 docs/              # Project documentation
+examples/          # Static benchmark trace examples
 ```
 
 ## Quickstart
@@ -61,7 +63,7 @@ uv sync --frozen --group dev
 source .venv/bin/activate
 ```
 
-Training and local-model inference dependencies are Linux-oriented. Install them only on a supported Linux machine or cluster node:
+For SFT on a CUDA-capable Linux machine:
 
 ```bash
 uv sync --frozen --group sft --group dev
@@ -75,7 +77,8 @@ cp .env.example .env
 source .env
 ```
 
-Required variables:
+Variables for live experiments (not required for archived-result verification):
+
 - `OPENAI_API_KEY`, `OPENAI_API_BASE` for API model evaluations
 - `WANDB_API_KEY`, `WANDB_ENTITY`, `WANDB_PROJECT` for experiment tracking
 - `PRIVESC_SSH_SERVERS`, `PRIVESC_USER`, `PRIVESC_KEY` for SSH connection to remote Docker hosts
@@ -84,7 +87,7 @@ For fully local Docker runs, prefer `scenario.backend=local_docker` and `rl.prim
 
 ### Full Paper Pipeline
 
-See `docs/PAPER_REPRODUCTION_RUNBOOK.md` for the end-to-end reproducible pipeline, including:
+See the [paper reproduction runbook](docs/PAPER_REPRODUCTION_RUNBOOK.md) for the end-to-end reproducible pipeline, including:
 
 - submodule/bootstrap steps
 - benchmark Docker image build
@@ -95,6 +98,10 @@ See `docs/PAPER_REPRODUCTION_RUNBOOK.md` for the end-to-end reproducible pipelin
 - static benchmark evaluation for base, SFT, and RL models
 
 The full paper pipeline requires Linux for the local-model stages, and in practice CUDA-capable Linux for SFT, Prime-RL, and vLLM-backed local evaluation.
+
+Before running the evaluation examples below, apply the benchmark patch described in
+[bootstrap](docs/PAPER_REPRODUCTION_RUNBOOK.md#1-bootstrap) and build the
+[static and procedural Docker images](docs/PAPER_REPRODUCTION_RUNBOOK.md#2-docker-images).
 
 ### Evaluate on Static Benchmark
 
@@ -124,7 +131,7 @@ source .env && uv run python -m src.runner \
   runner.max_runs=10
 ```
 
-### RL Training
+### SFT and RL Training
 
 ```bash
 # Full reproducible paper pipeline is documented in docs/PAPER_REPRODUCTION_RUNBOOK.md
@@ -149,7 +156,6 @@ the static benchmark remains reserved for evaluation. See
 [docs/PROCEDURAL_SCENARIOS.md](docs/PROCEDURAL_SCENARIOS.md) for
 the generator design and holdout policy.
 
-
 ## Related Work
 
 - **Linux PrivEsc Benchmark** (Happe et al.): [arXiv:2310.11409](https://arxiv.org/abs/2310.11409)
@@ -162,4 +168,4 @@ the generator design and holdout policy.
 
 ## License
 
-Research code, see LICENSE file.
+Research code, see [LICENSE](LICENSE).

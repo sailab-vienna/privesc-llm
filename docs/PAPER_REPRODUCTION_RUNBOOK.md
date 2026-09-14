@@ -1,8 +1,11 @@
 # Paper Reproduction Runbook
 
-This runbook maps the paper pipeline to the public source repository and released artifacts. It documents
-the configs readers need to reproduce or audit the reported experiments,
-without listing older pilots or non-paper variants.
+This runbook maps each paper experiment to its config, source path, and released
+artifact.
+
+[ARTIFACT.md](../ARTIFACT.md) defines the streamlined ACSAC reviewer workflow
+using released adapters. Sections 1 through 7 document the complete model
+pipeline.
 
 The paper pipeline is:
 
@@ -19,8 +22,8 @@ The paper pipeline is:
 - The static benchmark is the final held-out evaluation.
 - Trace design, SFT hyperparameters, reward variant, prompt, and checkpoint
   choices are selected on procedural holdout only.
-- API baseline reruns are supported but are not fully immutable because
-  provider-hosted model aliases and routing can drift.
+- Archived API traces provide the immutable reference; reruns depend on
+  provider-hosted model aliases and routing.
 
 ## 1. Bootstrap
 
@@ -102,18 +105,12 @@ These are the main files reviewers should inspect to assess the clean split:
 - `conf/datasets/sft/quality/shared.yaml`: SFT quality filters, including
   solution-leakage and benchmark-holdout rejection hooks
 
-Run the paper audit bundle with:
-
-```bash
-uv run python -m src.dataset.privesc.audit +experiment=audit/split_leakage
-```
-
 The released data artifact includes `leakage_audit/summary.json`,
 `leakage_audit/split_holdouts.tsv`, and `leakage_audit/benchmark_holdouts.tsv`.
 
 ## 4. Trace Collection And SFT Dataset
 
-The preprint uses DeepSeek V4 Flash as the teacher and evaluates a 2x3 trace
+The paper uses DeepSeek V4 Flash as the teacher and evaluates a 2x3 trace
 design: guided vs. unguided collection crossed with no, short, and long
 reasoning. The paper SFT data is unguided long reasoning.
 
@@ -181,8 +178,7 @@ uv run --group sft python -m src.sft.unsloth.train \
 
 The appendix reports the SFT learning-rate/rank selection protocol. The
 paper-facing sweep configs are the Unsloth configs under
-`conf/experiment/sweep/unsloth_*.yaml`; the TRL configs are not part of the
-preprint pipeline.
+`conf/experiment/sweep/unsloth_*.yaml`.
 
 Each SFT run writes a resolved config, training stats, final adapter, and
 `artifact_manifest.json`. Reviewers should check that the manifest points to
@@ -219,7 +215,8 @@ uv run --group rl python -m src.rl.prime_rl.train \
 
 Paper RL settings inherited by the reward configs include 1000 training steps,
 batch size 80, 8 rollouts per instance, 20 training rounds, round-robin
-procedural generator sampling, and no benchmark evaluation during training.
+procedural generator sampling. The static benchmark remains held out throughout
+training.
 
 For reward-ablation reproduction, run the four configs listed above from the
 same SFT adapter and select checkpoints on procedural holdout only.
@@ -238,15 +235,45 @@ Paper-facing evaluation configs:
 - `conf/experiment/eval/paper_static_base.yaml`
 - `conf/experiment/eval/benchmark.yaml`
 
-For exact paper-sized reruns, set `EVAL_RUNNER_RUNS_PER_ITEM=10` when using
-`scripts/run_model_eval_vllm.sh`, or pass `runner.runs_per_item=10` directly to
-`src.runner`.
+Rebuttal evaluation configs:
+
+- `conf/experiment/eval/paper_static_qwen3_8b_thinking.yaml`
+- `conf/experiment/eval/paper_static_qwen3_8b_nonthinking.yaml`
+- `conf/experiment/eval/paper_static_qwen3_14b_fp8_thinking.yaml`
+- `conf/experiment/eval/paper_static_qwen3_14b_fp8_nonthinking.yaml`
+- `conf/experiment/eval/paper_static_llama3_2_3b_instruct.yaml`
+- `conf/experiment/eval/paper_static_deepseek40_flash.yaml`
+
+Pinned local serving inputs:
+
+| Config | Model | Revision | Reasoning parser | Tool parser |
+|---|---|---|---|---|
+| `paper_static_qwen3_8b_{thinking,nonthinking}` | `Qwen/Qwen3-8B` | `b968826d9c46dd6066d109eabc6255188de91218` | `qwen3` | `hermes` |
+| `paper_static_qwen3_14b_fp8_{thinking,nonthinking}` | `Qwen/Qwen3-14B-FP8` | `9a283b4a5efbc09ce247e0ae5b02b744739e525a` | `qwen3` | `hermes` |
+| `paper_static_llama3_2_3b_instruct` | `unsloth/Llama-3.2-3B-Instruct` | `cfe38f8f38afea8b9f9cc66f634bf53c321cf426` | unset | `llama3_json` |
+
+Pass these values through `PAPER_EVAL_MODEL_REVISION`,
+`PAPER_EVAL_VLLM_REASONING_PARSER`, and
+`PAPER_EVAL_VLLM_TOOL_CALL_PARSER` to
+`scripts/run_model_eval_vllm.sh`. Thinking mode and sampling are defined by
+the Hydra config.
+
+For exact paper-sized reruns with `scripts/run_model_eval_vllm.sh`, set both
+`EVAL_RUNNER_RUNS_PER_ITEM=10` and
+`EVAL_ANALYZE_EXPECTED_RUNS_PER_SCENARIO=10`. When calling `src.runner`
+directly, pass `runner.runs_per_item=10`.
+
+The exact released-model workflow is in
+[ARTIFACT.md](../ARTIFACT.md#2-independently-repeat-the-local-model-result). The
+commands below show the same launcher with locally trained adapters.
 
 Base Qwen3-4B:
 
 ```bash
-source .env
 EVAL_RUNNER_RUNS_PER_ITEM=10 \
+EVAL_ANALYZE_EXPECTED_RUNS_PER_SCENARIO=10 \
+PAPER_EVAL_MODEL_REVISION=cdbee75f17c01a7cc42f958dc650907174af0554 \
+PAPER_EVAL_HYDRA_OVERRIDES='scenario.backend=local_docker' \
 bash scripts/run_model_eval_vllm.sh \
   Qwen/Qwen3-4B-Instruct-2507 \
   qwen3-4b
@@ -257,8 +284,10 @@ SFT adapter:
 ```bash
 SFT_RUN=/absolute/path/to/sft_run
 
-source .env
 EVAL_RUNNER_RUNS_PER_ITEM=10 \
+EVAL_ANALYZE_EXPECTED_RUNS_PER_SCENARIO=10 \
+PAPER_EVAL_MODEL_REVISION=cdbee75f17c01a7cc42f958dc650907174af0554 \
+PAPER_EVAL_HYDRA_OVERRIDES='scenario.backend=local_docker' \
 PAPER_EVAL_ENABLE_LORA=1 \
 PAPER_EVAL_LORA_ADAPTER_DIR="$SFT_RUN/checkpoints/final" \
 PAPER_EVAL_LORA_MODEL_NAME=sft_qwen3_4b \
@@ -273,8 +302,10 @@ RL adapter:
 RL_RUN=/absolute/path/to/rl_run/prime_rl
 STEP=300
 
-source .env
 EVAL_RUNNER_RUNS_PER_ITEM=10 \
+EVAL_ANALYZE_EXPECTED_RUNS_PER_SCENARIO=10 \
+PAPER_EVAL_MODEL_REVISION=cdbee75f17c01a7cc42f958dc650907174af0554 \
+PAPER_EVAL_HYDRA_OVERRIDES='scenario.backend=local_docker' \
 PAPER_EVAL_ENABLE_LORA=1 \
 PAPER_EVAL_LORA_ADAPTER_DIR="$RL_RUN/run_default/broadcasts/step_${STEP}" \
 PAPER_EVAL_LORA_MODEL_NAME="prime_rl_${STEP}" \
@@ -301,7 +332,7 @@ uv run python -m src.runner \
 
 ## 8. ChainReactor Baseline
 
-The preprint reports ChainReactor as a plan-finding baseline on the same
+The paper reports ChainReactor as a plan-finding baseline on the same
 static benchmark. Use:
 
 - `docs/CHAINREACTOR_STATIC_BASELINE_RUNBOOK.md`

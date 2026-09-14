@@ -1,62 +1,29 @@
-# Training Cost Estimation Methodology
+# Training Cost Estimation
 
-This document summarizes the direct GPU rental cost for the paper training runs.
+The recorded selected SFT runtime and RL training through checkpoint 300 cost
+**$121.08** using four H100 GPUs at $2.29 per GPU-hour.
 
-The paper uses Verda (formerly DataCrunch) on-demand H100 SXM5 pricing as the reference rental rate.
-This is a good fit for the paper context because it is a European provider with Nordic data centers, GDPR-aligned compliance positioning, 100% renewable energy, and the same class of hardware used for training.
+| Stage | Recorded seconds | Estimated cost |
+|---|---:|---:|
+| Selected SFT, seed 2026 | 6,006.8683 | $15.28 |
+| Selected RL, through checkpoint 300 | 41,578.7137 | $105.79 |
+| Combined | 47,585.5820 | **$121.08** |
 
-- Paper H100 SXM5 rental rate: $2.29 per GPU-hour
+The calculation is `seconds * 4 / 3600 * 2.29`; the combined total is rounded
+only after adding both unrounded stage costs.
 
-## 1. Cost Formula
+The [SFT record](https://huggingface.co/datasets/sailab-vienna/privesc-llm-evals/blob/5dba67dfd4c16da78a720c16f01e93820cb3471c/evaluation_artifacts/provenance/cost/training/sft_train_stats.json)
+contains the selected run's trainer runtime. The
+[RL timing record](https://huggingface.co/datasets/sailab-vienna/privesc-llm-evals/blob/5dba67dfd4c16da78a720c16f01e93820cb3471c/evaluation_artifacts/provenance/cost/training/rl_timing.csv)
+covers updates 0 through 299, adapter broadcasts, and checkpoints through 300.
+The estimate sums these selected-run timing records.
 
-For a run that uses `g` GPUs for `t` seconds, total GPU-hours and cost are:
+The estimate amortizes against Claude after 696.9 successful escalations,
+approximately 700.
 
-$$
-\text{GPU-hours} = g \cdot \frac{t}{3600}
-$$
+The verifier recomputes both stage costs, the combined total, and the Claude
+break-even point:
 
-$$
-\text{cost} = \text{GPU-hours} \cdot 2.29
-$$
-
-## 2. SFT Training Cost
-
-Provided runtime:
-
-- Duration: 6,060 s (1 h 41 m)
-- GPUs: 4 x H100
-
-Computation:
-
-- GPU-hours: $4 \cdot \frac{6060}{3600} = 6.7333$
-- Cost: $6.7333 \cdot 2.29 = 15.4193$
-
-Rounded total:
-
-- SFT cost: **$15.42**
-
-## 3. RL Training Cost
-
-Provided runtime:
-
-- Duration: 41,493 s (11 h 31 m 33 s) active training time to the deployed checkpoint (step 300 of 1,000)
-- GPUs: 4 x H100
-
-Computation:
-
-- GPU-hours: $4 \cdot \frac{41493}{3600} = 46.1033$
-- Cost: $46.1033 \cdot 2.29 = 105.3766$
-
-Rounded total:
-
-- RL cost: **$105.38**
-
-## 4. Combined Training Cost
-
-- Total cost: $15.4193 + 105.3766 = 120.7959$
-- Rounded combined cost: **$120.80$**
-
-## Reference
-
-- **Verda H100 pricing:** [Verda products](https://verda.com/products)
-- **Provider context used in the paper:** European provider, Nordic data centers, GDPR/compliance positioning, and 100% renewable energy
+```bash
+.venv/bin/python scripts/paper/verify_artifact.py
+```

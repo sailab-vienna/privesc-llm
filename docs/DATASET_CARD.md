@@ -110,20 +110,12 @@ regime-specific overlays in `guided.yaml` and `unguided.yaml`.
   - HTML entities in assistant/tool text
   - container misconfiguration indicators (expected binaries missing)
   - holdout leakage matches
-- Leakage safeguards:
-  - guided: `verify_solution_in_prompt: true`, `reject_on_secret_solution_leakage: true`
-  - unguided: `verify_solution_in_prompt: false`, `reject_on_secret_solution_leakage: false`
 
 ## Leakage Audit (Assembled Dataset)
 
-The assembled dataset was scanned for direct solution-leakage markers and returned zero matches for:
-
-- `SECRET SOLUTION DATA`
-- `internal solution`
-- `based on the solution`
-- `the solution data`
-- `secret solution data`
-- `reference solution`
+The released audit verifies disjoint procedural profiles and zero model-visible
+solution-marker hits across 13,200 examples using 14 marker phrases. The audit
+results and holdout tables are included in `leakage_audit/` in the data artifact.
 
 ## Schema
 
@@ -159,7 +151,7 @@ Observed message roles: `system`, `user`, `assistant`, `tool`.
 
 - The release artifact includes `paper_sft_dataset/`.
 - Verify `training/stats.json` and `validation/stats.json` before training; expected split sizes are `2000` and `200`.
-- Recompute archive SHA256 checksums for the exact artifact bundle used in a paper release.
+- Follow [ARTIFACT.md](../ARTIFACT.md) to verify the pinned release and its audit results.
 
 ## Intended Use
 
@@ -181,4 +173,3 @@ Observed message roles: `system`, `user`, `assistant`, `tool`.
 - Regenerate with:
   - `scripts/collect_and_assemble.sh unguided deepseek training`
   - `scripts/collect_and_assemble.sh unguided deepseek validation`
-- Recompute integrity manifest after any rebuild.
