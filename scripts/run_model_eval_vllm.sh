@@ -40,7 +40,7 @@ fi
 
 cd "$PROJECT_DIR"
 
-if [ -f .env ]; then
+if [ -f .env ] && [ "${PAPER_EVAL_SKIP_DOTENV:-0}" != 1 ]; then
   set -a
   source .env
   set +a

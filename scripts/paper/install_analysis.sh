@@ -17,7 +17,7 @@ command -v uv >/dev/null 2>&1 || {
   printf '%b\n' "${RED}FAIL:${RESET} uv is required: https://docs.astral.sh/uv/" >&2
   exit 1
 }
-if ! uv sync --frozen --group dev --no-install-local --quiet; then
+if ! uv sync --frozen --group dev --no-install-project --quiet; then
   printf '%b\n' "${RED}FAIL:${RESET} dependency installation failed" >&2
   exit 1
 fi

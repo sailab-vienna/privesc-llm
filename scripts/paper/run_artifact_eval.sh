@@ -4,7 +4,8 @@ set -euo pipefail
 PROJECT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$PROJECT_DIR"
 
-RUNS_PER_SCENARIO="${RUNS_PER_SCENARIO:-5}"
+RUNS_PER_SCENARIO="${RUNS_PER_SCENARIO:-3}"
+SCENARIO_BACKEND="${PRIVESC_SCENARIO_BACKEND:-local_docker}"
 SCENARIO_COUNT=12
 MODEL_COUNT=3
 WORKERS="${EVAL_RUNNER_WORKERS:-8}"
@@ -37,6 +38,20 @@ fail() {
   exit 1
 }
 
+case "$SCENARIO_BACKEND" in
+  local_docker) ;;
+  remote_ssh)
+    [[ "${PRIVESC_SSH_SERVERS:-}" =~ ^[^,:[:space:]]+:[0-9]{1,5}$ ]] ||
+      fail "remote_ssh requires one PRIVESC_SSH_SERVERS host:port endpoint"
+    [[ -f "${PRIVESC_KEY:-}" && -r "${PRIVESC_KEY:-}" ]] ||
+      fail "remote_ssh requires PRIVESC_KEY to name a readable private key"
+    export PRIVESC_USER="${PRIVESC_USER:-root}"
+    export DOCKER_HOST="ssh://${PRIVESC_USER}@${PRIVESC_SSH_SERVERS}"
+    export PAPER_EVAL_SKIP_DOTENV=1
+    ;;
+  *) fail "PRIVESC_SCENARIO_BACKEND must be local_docker or remote_ssh" ;;
+esac
+
 if [[ ! "$RUNS_PER_SCENARIO" =~ ^[1-9][0-9]*$ ]]; then
   fail "RUNS_PER_SCENARIO must be a positive integer without leading zeros; got: $RUNS_PER_SCENARIO"
 fi
@@ -61,7 +76,7 @@ for required in git uv docker jq curl nvidia-smi; do
     fail "missing required command: $required"
 done
 docker info >/dev/null 2>&1 ||
-  fail "Docker is unavailable. Start the rootful Docker daemon and rerun."
+  fail "Docker is unavailable. Check the daemon and connection, then rerun."
 nvidia-smi >/dev/null 2>&1 ||
   fail "The NVIDIA driver is unavailable. Check the GPU driver and rerun."
 
@@ -89,13 +104,13 @@ stage 2 "Install the locked analysis environment"
 run_logged "dependency installation" "$LOG_DIR/02-install.log" \
   bash scripts/paper/install_analysis.sh
 
-stage 3 "Build and verify the $SCENARIO_COUNT benchmark containers"
+stage 3 "Build benchmark images and verify the $SCENARIO_COUNT paper scenarios"
 run_logged "benchmark patch" "$LOG_DIR/03-patch.log" \
   bash scripts/apply_benchmark_patch.sh
 run_logged "benchmark image build" "$LOG_DIR/03-build.log" \
   bash external/benchmark-privesc-linux/docker/build.sh
 run_logged "benchmark container verification" "$LOG_DIR/03-test.log" \
-  env PRIVESC_SCENARIO_BACKEND=local_docker \
+  env PRIVESC_SCENARIO_BACKEND="$SCENARIO_BACKEND" \
   uv run --frozen python -m pytest -q test/test_solutions.py
 
 stage 4 "Download the pinned SFT and RL adapters"
@@ -110,7 +125,7 @@ export PAPER_EVAL_UV_PROJECT_ENVIRONMENT="${PAPER_EVAL_UV_PROJECT_ENVIRONMENT:-$
 export PAPER_EVAL_UV_GROUP=rl
 export PAPER_EVAL_EXPERIMENT=eval/paper_static_qwen3_4b_base
 export PAPER_EVAL_MODEL_REVISION="$BASE_REVISION"
-export PAPER_EVAL_HYDRA_OVERRIDES=scenario.backend=local_docker
+export PAPER_EVAL_HYDRA_OVERRIDES="scenario.backend=$SCENARIO_BACKEND"
 export PAPER_EVAL_VLLM_MAX_MODEL_LEN=32768
 export PAPER_EVAL_VLLM_TOOL_CALL_PARSER=hermes
 export PAPER_EVAL_VLLM_HEALTH_CHECK_ATTEMPTS=360
