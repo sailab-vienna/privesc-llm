@@ -2,170 +2,69 @@
 
 [![arXiv](https://img.shields.io/badge/arXiv-2603.17673-b31b1b.svg)](https://arxiv.org/abs/2603.17673)
 
-> Post-training local LLM agents for Linux privilege escalation using SFT and RL with verifiable rewards.
+This repository contains the source code, experiment configurations, and evaluation scripts for our ACSAC 2026 paper, [Towards Reliable Local Security Agents: Verifiable Post-Training for Linux Privilege Escalation](https://arxiv.org/abs/2603.17673).
 
-## Public Release
+[![Training and evaluation architecture: procedural environments, teacher traces, SFT, RLVR, and a held-out benchmark.](docs/figures/architecture.png)](docs/figures/architecture.png)
 
-This repository contains the public source code and artifacts for the [PrivEsc-LLM paper](https://arxiv.org/abs/2603.17673), accepted at ACSAC 2026.
-Datasets, models, and evaluation results are available on Hugging Face:
+We study how small, open-weight models can become reliable local security agents through training on procedurally generated scenarios. Our recipe combines supervised fine-tuning (SFT) and reinforcement learning with verifiable rewards (RLVR), using Linux privilege escalation as a controlled testbed.
 
-- [`sailab-vienna/privesc-llm-data`](https://huggingface.co/datasets/sailab-vienna/privesc-llm-data): paper SFT dataset, leakage audit, and examples
-- [`sailab-vienna/privesc-llm-4b`](https://huggingface.co/sailab-vienna/privesc-llm-4b): paper SFT and final RL LoRA adapters
-- [`sailab-vienna/privesc-llm-evals`](https://huggingface.co/datasets/sailab-vienna/privesc-llm-evals): paper summaries, compact numeric evidence, and complete headline and rebuttal static benchmark traces
+Controlled ablations, leakage checks, and repeated evaluations examine how demonstration and reward design affect reliability, efficiency, and generalization.
 
-Start with [ARTIFACT.md](ARTIFACT.md) for the scripted artifact-evaluation
-workflow. The [paper reproduction runbook](docs/PAPER_REPRODUCTION_RUNBOOK.md)
-documents the full experiment pipeline.
+## Results
 
-Trace examples, including the two referenced in the paper, are in
-[examples/](examples/).
+On the held-out [Linux PrivEsc benchmark](https://github.com/ipa-lab/benchmark-privesc-linux), applying the recipe to Qwen3 4B improves success within 20 interaction rounds from **40.8%** to **79.2%** after SFT and **93.3%** after RL, compared with **100%** for Claude Opus 4.7.
 
-## Motivation
+The resulting 4B model supports local inference on a single consumer GPU, allowing sensitive host data to remain within the operator’s environment. At the same round budget, its estimated inference cost per successful escalation is **$0.00213**, over **80× lower than Claude Opus 4.7**, under the paper’s [RTX 5090 serving-cost and API-pricing assumptions](docs/TOKEN_COST.md).
 
-Vulnerability assessments involve highly sensitive data: system configurations, credentials, internal network details. Organizations often cannot send this data to external cloud APIs. This repository studies post-training compact local models for verifiable Linux privilege-escalation tasks while keeping deployment-time inference local.
+| Budgeted success | Cost and reliability |
+| :---: | :---: |
+| [![Success within each round budget for the six headline models.](docs/figures/budget_curve.png)](docs/figures/budget_curve.png) | [![Pareto comparison of success and estimated inference cost per successful escalation at 20 rounds.](docs/figures/pareto_cost.png)](docs/figures/pareto_cost.png) |
+| <sub>Empirical success within each round budget. Shading shows 95% Wilson confidence intervals; N=120 runs per model.</sub> | <sub>Static-benchmark success at 20 rounds versus estimated inference cost per successful escalation; N=120 runs per model.</sub> |
 
-## Overview
+## Getting Started
 
-- **Benchmark**: [Linux PrivEsc benchmark](https://github.com/ipa-lab/benchmark-privesc-linux) scenarios in isolated containers
-- **Procedural Training**: 10 generators producing unlimited training scenarios with holdout design
-- **Agent**: ReAct loop with two tools (`exec_command` and `test_credentials`)
-- **Training**: SFT on procedural traces, then RL with Prime-RL
+For artifact evaluation, start with the [evaluation guide](ARTIFACT.md) for setup, hardware requirements, and expected results.
 
-## Repository Layout
+- [Verify released results on CPU](ARTIFACT.md#1-verify-archived-evidence): recompute paper and rebuttal results from pinned evidence.
+- [Repeat the local-model comparison on GPU](ARTIFACT.md#2-independently-repeat-the-local-model-result): independently evaluate Base, SFT, and PrivEsc-LLM using the released checkpoints.
 
-```
-src/
-├── gym/           # Agent loop, scenario runner, tools
-├── generators/    # Procedural scenario generators
-├── scenarios/     # Static/procedural scenario sources
-├── rl/            # RL training and reward code
-└── sft/           # SFT training pipelines
+Released artifacts on Hugging Face:
 
-conf/
-├── scenarios/     # Static benchmark scenario configs
-├── generators/    # Procedural generator configs
-├── experiment/    # Experiment presets
-└── runner/        # Runner configurations
+- [Models](https://huggingface.co/sailab-vienna/privesc-llm-4b): SFT and RL LoRA adapters.
+- [Datasets](https://huggingface.co/datasets/sailab-vienna/privesc-llm-data): SFT datasets and leakage audit.
+- [Evaluation results](https://huggingface.co/datasets/sailab-vienna/privesc-llm-evals): summaries and complete headline and rebuttal traces.
 
-docs/              # Project documentation
-examples/          # Static benchmark trace examples
-```
-
-## Quickstart
-
-### Setup
-
-General repo setup (works on macOS and Linux for docs, configs, and non-training development):
-
-```bash
-git submodule update --init --recursive
-uv sync --frozen --group dev
-source .venv/bin/activate
-```
-
-For SFT on a CUDA-capable Linux machine:
-
-```bash
-uv sync --frozen --group sft --group dev
-```
-
-### Environment
-
-```bash
-cp .env.example .env
-# Edit with your API keys and SSH settings
-source .env
-```
-
-Variables for live experiments (not required for archived-result verification):
-
-- `OPENAI_API_KEY`, `OPENAI_API_BASE` for API model evaluations
-- `WANDB_API_KEY`, `WANDB_ENTITY`, `WANDB_PROJECT` for experiment tracking
-- `PRIVESC_SSH_SERVERS`, `PRIVESC_USER`, `PRIVESC_KEY` for SSH connection to remote Docker hosts
-
-For fully local Docker runs, prefer `scenario.backend=local_docker` and `rl.prime_rl.scenario_backend=local_docker`; in that mode the `PRIVESC_*` variables are optional.
-
-### Full Paper Pipeline
-
-See the [paper reproduction runbook](docs/PAPER_REPRODUCTION_RUNBOOK.md) for the end-to-end reproducible pipeline, including:
-
-- submodule/bootstrap steps
-- benchmark Docker image build
-- procedural trace collection
-- SFT dataset assembly
-- SFT training
-- Prime-RL warm start from the produced SFT adapter
-- static benchmark evaluation for base, SFT, and RL models
-
-The full paper pipeline requires Linux for the local-model stages, and in practice CUDA-capable Linux for SFT, Prime-RL, and vLLM-backed local evaluation.
-
-Before running the evaluation examples below, apply the benchmark patch described in
-[bootstrap](docs/PAPER_REPRODUCTION_RUNBOOK.md#1-bootstrap) and build the
-[static and procedural Docker images](docs/PAPER_REPRODUCTION_RUNBOOK.md#2-docker-images).
-
-### Evaluate on Static Benchmark
-
-```bash
-# Single scenario (1 run)
-source .env && uv run python -m src.runner \
-  +experiment=eval/benchmark \
-  scenario.backend=local_docker \
-  agent.model=openai/gpt-5.2 \
-  runner.source.scenarios='[01_vuln_suid_gtfo]' \
-  runner.runs_per_item=1
-
-# Configured static benchmark
-source .env && uv run python -m src.runner \
-  +experiment=eval/benchmark \
-  scenario.backend=local_docker \
-  agent.model=openai/gpt-5.2
-```
-
-### Evaluate on Procedural Scenarios
-
-```bash
-source .env && uv run python -m src.runner \
-  +experiment=eval/paper_procedural \
-  scenario.backend=local_docker \
-  agent.model=openai/gpt-5.2 \
-  runner.max_runs=10
-```
-
-### SFT and RL Training
-
-```bash
-# Full reproducible paper pipeline is documented in docs/PAPER_REPRODUCTION_RUNBOOK.md
-
-# Minimal local SFT
-source .env && uv run --group sft python -m src.sft.unsloth.train +experiment=train/paper_qwen3_4b_sft
-
-# Minimal local Prime-RL warm start from an SFT adapter
-source .env && uv run --group rl python -m src.rl.prime_rl.train \
-  +experiment=train/paper_prime_rl_reward_outcome_cost \
-  rl.prime_rl.base_model=Qwen/Qwen3-4B-Instruct-2507 \
-  rl.prime_rl.init_adapter_path=/absolute/path/to/sft_run/checkpoints/final \
-  rl.prime_rl.scenario_backend=local_docker
-```
-
-Reward ablation presets reported in the paper are `train/paper_prime_rl_reward_outcome`, `train/paper_prime_rl_reward_outcome_round`, `train/paper_prime_rl_reward_outcome_cost`, and `train/paper_prime_rl_reward_outcome_round_cost`. See [docs/PAPER_REPRODUCTION_RUNBOOK.md](docs/PAPER_REPRODUCTION_RUNBOOK.md) for the paper-facing config map.
-
-## Procedural Generators
-
-Procedural generators provide the training and validation environments while
-the static benchmark remains reserved for evaluation. See
-[docs/PROCEDURAL_SCENARIOS.md](docs/PROCEDURAL_SCENARIOS.md) for
-the generator design and holdout policy.
-
-## Related Work
-
-- **Linux PrivEsc Benchmark** (Happe et al.): [arXiv:2310.11409](https://arxiv.org/abs/2310.11409)
-- **InterCode-CTF, CyBench, AutoPenBench**: Broader pentest benchmarks
+[Trace examples](examples/) show successful and failed runs, including the two traces referenced in the paper.
 
 ## Documentation
 
-- [Procedural Scenarios](docs/PROCEDURAL_SCENARIOS.md): generator design and holdout strategy
-- [Paper Reproduction Runbook](docs/PAPER_REPRODUCTION_RUNBOOK.md): end-to-end reproducible local-model pipeline
+- [Paper reproduction runbook](docs/PAPER_REPRODUCTION_RUNBOOK.md): setup, data collection, training, and evaluation.
+- [Evaluation protocol](docs/EVAL_PROTOCOL.md): paper run counts, round budgets, and metrics.
+- [Procedural environments](docs/PROCEDURAL_SCENARIOS.md): generator design and holdout policy.
+
+## Repository Layout
+
+```text
+src/               # Agent, environments, and training code
+conf/              # Hydra experiment and environment configs
+scripts/paper/     # Artifact verification and evaluation scripts
+docker/            # Procedural Docker image
+external/          # Benchmark and training dependencies
+docs/              # Protocols, runbook, and paper figures
+examples/          # Static benchmark trace examples
+```
+
+## Citation
+
+```bibtex
+@inproceedings{normann2026reliable,
+  title = {Towards Reliable Local Security Agents: Verifiable Post-Training for Linux Privilege Escalation},
+  author = {Normann, Philipp and Happe, Andreas and Cito, J{\"u}rgen and Arp, Daniel},
+  booktitle = {Annual Computer Security Applications Conference},
+  year = {2026},
+}
+```
 
 ## License
 
-Research code, see [LICENSE](LICENSE).
+Source code is released under the [MIT License](LICENSE).
