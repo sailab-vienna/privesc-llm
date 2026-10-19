@@ -1,0 +1,11 @@
+Claim 1: Released results
+
+Recompute the paper's results from the released evaluation records: the
+trace-design and reward-design ablations (RQ1, RQ2), the static-benchmark
+comparison (RQ3), the cost analysis (RQ4), the supporting evaluations, and
+the prompt-sensitivity audit. The runner also checks the training/benchmark
+split audit and the ChainReactor planner records.
+artifact/ARTIFACT.md maps each result to its evidence.
+
+Run after bash install.sh:
+    bash claims/claim1/run.sh

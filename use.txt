@@ -1,0 +1,9 @@
+Intended use: research on training and evaluating local LLM agents for Linux
+privilege escalation, using synthetic training data and controlled benchmark
+containers.
+
+Limitations: Claim 1 recomputes results from the released records. Claim 2
+reruns the main comparison with three instead of ten runs per scenario, so its
+success rates vary more than the paper's. Training is not part of the
+evaluation workflow. Claim 2 starts a privileged container, so run it on an
+isolated host you control.

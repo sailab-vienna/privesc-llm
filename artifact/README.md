@@ -38,6 +38,8 @@ Released artifacts on Hugging Face:
 
 ## Documentation
 
+Run the commands in these documents from this directory (`artifact/`).
+
 - [Paper reproduction runbook](docs/PAPER_REPRODUCTION_RUNBOOK.md): setup, data collection, training, and evaluation.
 - [Evaluation protocol](docs/EVAL_PROTOCOL.md): paper run counts, round budgets, and metrics.
 - [Procedural environments](docs/PROCEDURAL_SCENARIOS.md): generator design and holdout policy.

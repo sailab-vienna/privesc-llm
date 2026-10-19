@@ -1,0 +1,5 @@
+PrivEsc-LLM source code: MIT License
+Full text: artifact/LICENSE
+URL: https://github.com/sailab-vienna/privesc-llm/blob/acsac2026-ae/artifact/LICENSE
+
+External dependencies, datasets, and models keep their own licenses.

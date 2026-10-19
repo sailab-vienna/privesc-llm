@@ -76,7 +76,7 @@ under its recorded API prices, 2.2012 times the PrivEsc-LLM local estimate.
 
 The numeric inputs are in the pinned
 [evaluation artifact](https://huggingface.co/datasets/sailab-vienna/privesc-llm-evals/tree/5dba67dfd4c16da78a720c16f01e93820cb3471c/evaluation_artifacts/provenance/cost/rtx5090).
-Run the shared check from the repository root:
+Run the shared check from the `artifact/` directory:
 
 ```bash
 .venv/bin/python scripts/paper/verify_artifact.py

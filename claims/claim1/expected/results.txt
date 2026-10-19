@@ -1,0 +1,10 @@
+The runner prints the recomputed results and ends with:
+
+PASS: archived evidence matches all checked paper and rebuttal claims
+
+"Rebuttal" refers to the supporting evaluations. Any mismatch stops the run
+with a FAIL message.
+
+At r=20, the static-benchmark results include Qwen3 4B 49/120 (40.8%),
+Qwen3 4B SFT 95/120 (79.2%), and PrivEsc-LLM 4B 112/120 (93.3%).
+Recomputed summaries are saved under artifact/outputs/ae/archived/.

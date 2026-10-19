@@ -8,9 +8,12 @@ three repetitions each (108 runs). It preserves the checkpoints, evaluation
 settings, and root-proof success criteria while reducing repetitions from the
 paper's ten per scenario. The archived workflow checks the full released results.
 
+Run the commands below from the top-level directory, the parent of
+`artifact/`.
+
 ## Scope
 
-| Claim | Reviewer evidence |
+| Paper result | Evidence checked |
 |---|---|
 | RQ1: SFT trace design | Recompute six success curves and intervals from 3,000 compact rollout records. |
 | RQ2: reward design | Recompute the four reported reward-condition results and audit all 4,000 compact rollout records. |
@@ -27,9 +30,6 @@ Released revisions used by the scripts:
 - [SFT and RL adapters](https://huggingface.co/sailab-vienna/privesc-llm-4b/tree/e7a10aadbcc0d0cd721533480d4fd47ee083dc63)
 - [dataset and split audit](https://huggingface.co/datasets/sailab-vienna/privesc-llm-data/tree/39a9d2ff37222184fcaf2a6d9a124906e8bb49ad)
 
-The complete evaluated package will be deposited in a permanent public archive
-by the final artifact deadline.
-
 ## 1. Verify archived evidence
 
 This CPU-only path runs without Docker and requires Linux x86-64, Python 3.12,
@@ -40,8 +40,8 @@ downloads into an empty local cache.
 From a fresh clone, run:
 
 ```bash
-bash scripts/paper/install_analysis.sh
-.venv/bin/python scripts/paper/verify_artifact.py
+bash install.sh
+bash claims/claim1/run.sh
 ```
 
 Public artifacts download without authentication or paid API access.
@@ -69,12 +69,12 @@ host for the automatically managed image cache.
 By default, vLLM, agents, and rootful Docker run on one host:
 
 ```bash
-bash scripts/paper/run_artifact_eval.sh
+bash claims/claim2/run.sh
 ```
 
 The script installs dependencies, prepares and tests the benchmark containers,
 downloads the pinned models, and evaluates them with eight workers. Results and
-logs are written under `outputs/ae/live/`.
+logs are written under `artifact/outputs/ae/live/`.
 
 <details>
 <summary>Optional: use a separate Docker host</summary>
@@ -103,7 +103,7 @@ PRIVESC_SCENARIO_BACKEND=remote_ssh \
 PRIVESC_SSH_SERVERS='docker-host.example:22' \
 PRIVESC_USER=root \
 PRIVESC_KEY="$HOME/.ssh/id_ed25519" \
-bash scripts/paper/run_artifact_eval.sh
+bash claims/claim2/run.sh
 ```
 
 In two-host mode, the script derives `DOCKER_HOST`; image builds and scenario

@@ -1,0 +1,17 @@
+Claim 1 (CPU): Linux x86-64, Python 3.12, Git, uv, 2 CPU cores, 2 GB RAM,
+and about 4 GB free disk. Docker and a GPU are not needed.
+
+Claim 2 (GPU): Linux x86-64 with glibc 2.34 or newer; an NVIDIA GPU with
+compute capability 8.0 or newer and at least 24 GB VRAM; NVIDIA driver
+575.51.03 or newer; Bash, Git, uv, rootful Docker, jq, and curl. We recommend
+8 CPU cores, 32 GB RAM, and 80 GB free disk.
+
+Both claims need network access for the initial downloads, and Claim 2 also
+for image builds. No GUI, paid service, or API key is required. Claim 2
+starts a privileged Docker-in-Docker container for scenario 06, so run it on
+an isolated host. TCP port 5000 must be free on the Docker host for the local
+image cache.
+
+Public infrastructure: Claim 1 runs on any Linux VM. Bare-metal nodes on
+Chameleon or CloudLab, or cloud GPU VMs, that meet the Claim 2 requirements
+above can run Claim 2.

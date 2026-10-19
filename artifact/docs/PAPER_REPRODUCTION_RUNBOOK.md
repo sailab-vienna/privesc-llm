@@ -31,8 +31,8 @@ The paper pipeline is:
 Clone with submodules:
 
 ```bash
-git clone --recursive https://github.com/sailab-vienna/privesc-llm.git
-cd privesc-llm
+git clone --recursive --branch acsac2026-ae https://github.com/sailab-vienna/privesc-llm.git
+cd privesc-llm/artifact
 git submodule update --init --recursive
 ```
 

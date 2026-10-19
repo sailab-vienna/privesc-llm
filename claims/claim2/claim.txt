@@ -1,0 +1,14 @@
+Claim 2: Static-benchmark comparison
+
+Rerun the static-benchmark comparison (RQ3) with the released Qwen3 4B,
+Qwen3 4B SFT, and PrivEsc-LLM 4B models on all twelve scenarios. The paper
+uses ten runs per scenario; this scaled-down rerun uses three. It checks that
+SFT improves on the base model and that RL improves on SFT at r=20, using the
+paper's root-proof success criterion.
+
+Run:
+    bash claims/claim2/run.sh
+
+The runner sets up its environment, builds and tests the benchmark
+containers, downloads the pinned models, and runs the evaluation.
+Requirements are in infrastructure/constraints.

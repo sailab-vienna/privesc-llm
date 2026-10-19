@@ -1,0 +1,6 @@
+No author-operated host, account, or service is required. Run both claims on
+a Linux host you control that meets infrastructure/constraints.
+
+By default, Claim 2 runs the model server, the agents, and the benchmark
+containers on one host. To run the containers on a separate Docker host, such
+as a VM, follow the optional two-host setup in artifact/ARTIFACT.md.

@@ -2,21 +2,22 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 REPO_ROOT="$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel)"
 
 SUBMODULE_NAME="prime-rl"
-SUBMODULE_PATH="external/prime-rl"
-SUBMODULE_DIR="$REPO_ROOT/$SUBMODULE_PATH"
+SUBMODULE_DIR="$PROJECT_DIR/external/prime-rl"
+SUBMODULE_PATH="$(realpath --relative-to="$REPO_ROOT" "$SUBMODULE_DIR")"
 PRIME_RL_DIR="${PRIME_RL_DIR:-$SUBMODULE_DIR}"
 
 PATCH_FILES=(
-  "$REPO_ROOT/src/rl/prime_rl/patches/rl-lora-init-adapter-prime-rl.patch"
-  "$REPO_ROOT/src/rl/prime_rl/patches/rl-lm-head-temperature-compat-prime-rl.patch"
-  "$REPO_ROOT/src/rl/prime_rl/patches/rl-metrics-all-aggregation-prime-rl.patch"
-  "$REPO_ROOT/src/rl/prime_rl/patches/rl-buffer-round-robin-sampling-prime-rl.patch"
-  "$REPO_ROOT/src/rl/prime_rl/patches/rl-rollout-task-state-column-prime-rl.patch"
-  "$REPO_ROOT/src/rl/prime_rl/patches/rl-local-inference-ready-prime-rl.patch"
-  "$REPO_ROOT/src/rl/prime_rl/patches/rl-vllm-dp-coordinator-timeout-prime-rl.patch"
+  "$PROJECT_DIR/src/rl/prime_rl/patches/rl-lora-init-adapter-prime-rl.patch"
+  "$PROJECT_DIR/src/rl/prime_rl/patches/rl-lm-head-temperature-compat-prime-rl.patch"
+  "$PROJECT_DIR/src/rl/prime_rl/patches/rl-metrics-all-aggregation-prime-rl.patch"
+  "$PROJECT_DIR/src/rl/prime_rl/patches/rl-buffer-round-robin-sampling-prime-rl.patch"
+  "$PROJECT_DIR/src/rl/prime_rl/patches/rl-rollout-task-state-column-prime-rl.patch"
+  "$PROJECT_DIR/src/rl/prime_rl/patches/rl-local-inference-ready-prime-rl.patch"
+  "$PROJECT_DIR/src/rl/prime_rl/patches/rl-vllm-dp-coordinator-timeout-prime-rl.patch"
 )
 
 if [ -n "${PATCH_FILE:-}" ]; then
@@ -50,7 +51,7 @@ normalize_patch_files() {
   for i in "${!PATCH_FILES[@]}"; do
     patch_file="${PATCH_FILES[$i]}"
     if [[ "$patch_file" != /* ]]; then
-      patch_file="$REPO_ROOT/$patch_file"
+      patch_file="$PROJECT_DIR/$patch_file"
       PATCH_FILES[$i]="$patch_file"
     fi
     [ -f "$patch_file" ] || fail "Patch file does not exist: $patch_file"
@@ -72,7 +73,7 @@ apply_patch_if_needed() {
 
 sync_submodule_checkout() {
   echo "[INFO] Syncing $SUBMODULE_PATH to $EXPECTED_SUBMODULE_COMMIT"
-  git submodule update --init --checkout --force -- "$SUBMODULE_PATH" >/dev/null
+  git -C "$REPO_ROOT" submodule update --init --checkout --force -- "$SUBMODULE_PATH" >/dev/null
   git -C "$SUBMODULE_DIR" clean -fd >/dev/null
 
   check_checkout "$SUBMODULE_DIR" "$SUBMODULE_PATH"
@@ -101,7 +102,7 @@ sync_checkout() {
 EXPECTED_SUBMODULE_URL="$(git config -f "$REPO_ROOT/.gitmodules" --get submodule.$SUBMODULE_NAME.url || true)"
 [ -n "$EXPECTED_SUBMODULE_URL" ] || fail "Missing .gitmodules entry for $SUBMODULE_NAME"
 
-RECORDED_SUBMODULE_COMMIT="$(git rev-parse "HEAD:$SUBMODULE_PATH")"
+RECORDED_SUBMODULE_COMMIT="$(git -C "$REPO_ROOT" rev-parse "HEAD:$SUBMODULE_PATH")"
 [ -n "$RECORDED_SUBMODULE_COMMIT" ] || fail "Missing gitlink for $SUBMODULE_PATH at HEAD"
 
 CURRENT_SUBMODULE_COMMIT="$(git -C "$SUBMODULE_DIR" rev-parse HEAD)"
