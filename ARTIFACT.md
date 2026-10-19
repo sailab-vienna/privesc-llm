@@ -14,10 +14,10 @@ paper's ten per scenario. The archived workflow checks the full released results
 |---|---|
 | RQ1: SFT trace design | Recompute six success curves and intervals from 3,000 compact rollout records. |
 | RQ2: reward design | Recompute the four reported reward-condition results and audit all 4,000 compact rollout records. |
-| RQ3: static benchmark | Reaggregate all 720 headline traces and independently repeat Base, SFT, and PrivEsc-LLM on the static benchmark. |
+| RQ3: static benchmark | Reaggregate all 720 headline traces and independently repeat Base (Qwen3 4B), SFT (Qwen3 4B SFT), and PrivEsc-LLM (PrivEsc-LLM 4B) on the static benchmark. |
 | RQ4: cost | Recompute trace costs, RTX 5090 serving-cost calibration, recorded training cost through RL checkpoint 300, and amortization. |
 | Prompt sensitivity | Recompute twelve conditions from 2,880 compact rollout records. |
-| Rebuttal baselines | Reaggregate all 720 released traces for six model/mode conditions. |
+| Supporting evaluations | Reaggregate all 720 released traces for six model/mode conditions. |
 | Split and leakage | Verify disjoint profiles and zero model-visible solution-marker hits across 13,200 examples. |
 | ChainReactor | Verify plan finding, extraction status, and timeouts across twelve planner records; execution success is not measured. |
 
@@ -51,6 +51,8 @@ summaries, hashes, costs, and the split/leakage audit.
 
 A successful run ends with
 `PASS: archived evidence matches all checked paper and rebuttal claims`.
+The verifier and the released files refer to the supporting evaluations as
+"rebuttal".
 
 ## 2. Independently repeat the local-model result
 
@@ -143,11 +145,12 @@ Allow up to one working day, including downloads and image builds.
 
 ## Evidence scope
 
-Headline and rebuttal results use ten runs per scenario and a 60-round horizon,
-with r=20 as the primary endpoint. Prompt sensitivity uses twenty runs per
-scenario. Counts are rollouts, not distinct generated scenarios. Full traces
-are supplied for headline and rebuttal static evaluations; the other experiment
-families use compact outcome records with source-file fingerprints.
+Headline and supporting-evaluation results use ten runs per scenario and a
+60-round horizon, with r=20 as the primary endpoint. Prompt sensitivity uses
+twenty runs per scenario. Counts are rollouts, not distinct generated
+scenarios. Full traces are supplied for headline and supporting static
+evaluations; the other experiment families use compact outcome records with
+source-file fingerprints.
 
 Cost assumptions and scope are documented in [inference cost](docs/TOKEN_COST.md)
 and [training cost](docs/TRAINING_COST.md).

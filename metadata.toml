@@ -7,7 +7,7 @@ infrastructure_constraints = "The live workflow requires an NVIDIA GPU and Docke
 install_script = "https://github.com/sailab-vienna/privesc-llm/blob/main/scripts/paper/install_analysis.sh"
 use = "Research on post-training and evaluating local LLM agents for Linux privilege escalation using synthetic data and controlled, intentionally vulnerable environments."
 destructive = "Scenario 06 starts a privileged Docker-in-Docker container. Run the live workflow on an isolated test host under your control."
-claim1 = "Recomputing the released records verifies the reported RQ1-RQ4, prompt-sensitivity, and rebuttal results, together with the split/leakage audit and ChainReactor planner outcomes."
+claim1 = "Recomputing the released records verifies the reported RQ1-RQ4, prompt-sensitivity, and supporting-evaluation results, together with the split/leakage audit and ChainReactor planner outcomes."
 script1 = "https://github.com/sailab-vienna/privesc-llm/blob/main/scripts/paper/verify_artifact.py"
 expected1 = "All archived checks listed in ARTIFACT.md pass, and the verifier ends with PASS."
 claim2 = "A three-run-per-scenario scaled evaluation of the released Base, SFT, and PrivEsc-LLM checkpoints on all twelve static scenarios supports the Base-to-SFT and SFT-to-PrivEsc-LLM improvements at r=20."

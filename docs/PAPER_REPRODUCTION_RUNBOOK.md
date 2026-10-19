@@ -20,8 +20,9 @@ The paper pipeline is:
 
 - Training data comes only from procedural scenarios.
 - The static benchmark is the final held-out evaluation.
-- Trace design, SFT hyperparameters, reward variant, prompt, and checkpoint
-  choices are selected on procedural holdout only.
+- Trace design, SFT hyperparameters, reward variant, and checkpoint choices
+  are selected on procedural holdout only; the deployment prompt is fixed
+  beforehand.
 - Archived API traces provide the immutable reference; reruns depend on
   provider-hosted model aliases and routing.
 
@@ -235,7 +236,7 @@ Paper-facing evaluation configs:
 - `conf/experiment/eval/paper_static_base.yaml`
 - `conf/experiment/eval/benchmark.yaml`
 
-Rebuttal evaluation configs:
+Supporting evaluation configs:
 
 - `conf/experiment/eval/paper_static_qwen3_8b_thinking.yaml`
 - `conf/experiment/eval/paper_static_qwen3_8b_nonthinking.yaml`

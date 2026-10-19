@@ -71,7 +71,7 @@ round 20:
 | Claude Opus 4.7 | 120/120 | $0.17587358 |
 
 Gemma and Claude cost 5.4980 and 82.6065 times PrivEsc-LLM respectively.
-The rebuttal's DeepSeek V4 Flash baseline costs $0.00468650 per successful root
+The supporting DeepSeek V4 Flash baseline costs $0.00468650 per successful root
 under its recorded API prices, 2.2012 times the PrivEsc-LLM local estimate.
 
 The numeric inputs are in the pinned

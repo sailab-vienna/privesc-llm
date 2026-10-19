@@ -25,14 +25,14 @@ The resulting 4B model supports local inference on a single consumer GPU, allowi
 
 For artifact evaluation, start with the [evaluation guide](ARTIFACT.md) for setup, hardware requirements, and expected results.
 
-- [Verify released results on CPU](ARTIFACT.md#1-verify-archived-evidence): recompute paper and rebuttal results from pinned evidence.
+- [Verify released results on CPU](ARTIFACT.md#1-verify-archived-evidence): recompute paper and supporting-evaluation results from pinned evidence.
 - [Repeat the local-model comparison on GPU](ARTIFACT.md#2-independently-repeat-the-local-model-result): independently evaluate Base, SFT, and PrivEsc-LLM using the released checkpoints.
 
 Released artifacts on Hugging Face:
 
 - [Models](https://huggingface.co/sailab-vienna/privesc-llm-4b): SFT and RL LoRA adapters.
 - [Datasets](https://huggingface.co/datasets/sailab-vienna/privesc-llm-data): SFT datasets and leakage audit.
-- [Evaluation results](https://huggingface.co/datasets/sailab-vienna/privesc-llm-evals): summaries and complete headline and rebuttal traces.
+- [Evaluation results](https://huggingface.co/datasets/sailab-vienna/privesc-llm-evals): summaries and complete headline and supporting-evaluation traces.
 
 [Trace examples](examples/) show successful and failed runs, including the two traces referenced in the paper.
 

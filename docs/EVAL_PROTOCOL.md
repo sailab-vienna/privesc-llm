@@ -12,8 +12,9 @@ configs.
 - Primary endpoint: success within 20 rounds, `P(H_root <= 20)`.
 - Secondary endpoints: success within round budgets `5, 10, ..., 60`.
 - Containers: fresh container per run.
-- Selection rule: trace design, prompt, SFT hyperparameters, reward variant, and
-  RL checkpoint are selected exclusively on procedural holdout.
+- Selection rule: trace design, SFT hyperparameters, reward variant, and RL
+  checkpoint are selected exclusively on procedural holdout; the deployment
+  prompt is fixed beforehand.
 
 For exact paper-sized reruns, pass `runner.runs_per_item=10` to `src.runner`
 or set `EVAL_RUNNER_RUNS_PER_ITEM=10` for `scripts/run_model_eval_vllm.sh`.
